@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9A1C8D0A1797108E00B62D15 /* BrightBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A1C8D071797108E00B62D15 /* BrightBot.m */; };
+		9A1C8D0B1797108E00B62D15 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A1C8D091797108E00B62D15 /* NSDataBase64.m */; };
+		9A1C8D0D17A1B08F00B62D15 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 9A1C8D0C17A1B08F00B62D15 /* data */; };
+		9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FB1796E53B0036B677 /* UIKit.framework */; };
+		9AA5D0FE1796E53B0036B677 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FD1796E53B0036B677 /* Foundation.framework */; };
+		9AA5D1001796E53B0036B677 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FF1796E53B0036B677 /* CoreGraphics.framework */; };
+		9AA5D1061796E53B0036B677 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D1041796E53B0036B677 /* InfoPlist.strings */; };
+		9AA5D1081796E53B0036B677 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5D1071796E53B0036B677 /* main.m */; };
+		9AA5D10C1796E53B0036B677 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5D10B1796E53B0036B677 /* AppDelegate.m */; };
+		9AA5D10E1796E53B0036B677 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D10D1796E53B0036B677 /* Default.png */; };
+		9AA5D1101796E53B0036B677 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D10F1796E53B0036B677 /* Default@2x.png */; };
+		9AA5D1121796E53B0036B677 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D1111796E53B0036B677 /* Default-568h@2x.png */; };
+		9AA5D1151796E53B0036B677 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D1131796E53B0036B677 /* MainStoryboard_iPhone.storyboard */; };
+		9AA5D1181796E53B0036B677 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D1161796E53B0036B677 /* MainStoryboard_iPad.storyboard */; };
+		9AA5D11B1796E53B0036B677 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5D11A1796E53B0036B677 /* ViewController.m */; };
+		9AA5D1231796E53C0036B677 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D1221796E53C0036B677 /* SenTestingKit.framework */; };
+		9AA5D1241796E53C0036B677 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FB1796E53B0036B677 /* UIKit.framework */; };
+		9AA5D1251796E53C0036B677 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FD1796E53B0036B677 /* Foundation.framework */; };
+		9AA5D12D1796E53C0036B677 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D12B1796E53C0036B677 /* InfoPlist.strings */; };
+		9AA5D1301796E53C0036B677 /* BrightBot_TesterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9AA5D1261796E53C0036B677 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9AA5D0F01796E53B0036B677 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9AA5D0F71796E53B0036B677;
+			remoteInfo = "BrightBot Tester";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		9A1C8D061797108E00B62D15 /* BrightBot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrightBot.h; path = BrightBotSDK/BrightBot.h; sourceTree = "<group>"; };
+		9A1C8D071797108E00B62D15 /* BrightBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrightBot.m; path = BrightBotSDK/BrightBot.m; sourceTree = "<group>"; };
+		9A1C8D081797108E00B62D15 /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataBase64.h; path = BrightBotSDK/NSDataBase64.h; sourceTree = "<group>"; };
+		9A1C8D091797108E00B62D15 /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataBase64.m; path = BrightBotSDK/NSDataBase64.m; sourceTree = "<group>"; };
+		9A1C8D0C17A1B08F00B62D15 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
+		9AA5D0F81796E53B0036B677 /* BrightBot Tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BrightBot Tester.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AA5D0FB1796E53B0036B677 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		9AA5D0FD1796E53B0036B677 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9AA5D0FF1796E53B0036B677 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9AA5D1031796E53B0036B677 /* BrightBot Tester-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BrightBot Tester-Info.plist"; sourceTree = "<group>"; };
+		9AA5D1051796E53B0036B677 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9AA5D1071796E53B0036B677 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9AA5D1091796E53B0036B677 /* BrightBot Tester-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BrightBot Tester-Prefix.pch"; sourceTree = "<group>"; };
+		9AA5D10A1796E53B0036B677 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		9AA5D10B1796E53B0036B677 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		9AA5D10D1796E53B0036B677 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		9AA5D10F1796E53B0036B677 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		9AA5D1111796E53B0036B677 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		9AA5D1141796E53B0036B677 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		9AA5D1171796E53B0036B677 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		9AA5D1191796E53B0036B677 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		9AA5D11A1796E53B0036B677 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		9AA5D1211796E53C0036B677 /* BrightBot TesterTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightBot TesterTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AA5D1221796E53C0036B677 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		9AA5D12A1796E53C0036B677 /* BrightBot TesterTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BrightBot TesterTests-Info.plist"; sourceTree = "<group>"; };
+		9AA5D12C1796E53C0036B677 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9AA5D12E1796E53C0036B677 /* BrightBot_TesterTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrightBot_TesterTests.h; sourceTree = "<group>"; };
+		9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightBot_TesterTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9AA5D0F51796E53B0036B677 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */,
+				9AA5D0FE1796E53B0036B677 /* Foundation.framework in Frameworks */,
+				9AA5D1001796E53B0036B677 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AA5D11D1796E53C0036B677 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AA5D1231796E53C0036B677 /* SenTestingKit.framework in Frameworks */,
+				9AA5D1241796E53C0036B677 /* UIKit.framework in Frameworks */,
+				9AA5D1251796E53C0036B677 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9AA5D0EF1796E53B0036B677 = {
+			isa = PBXGroup;
+			children = (
+				9AA5D1011796E53B0036B677 /* BrightBot Tester */,
+				9AA5D1281796E53C0036B677 /* BrightBot TesterTests */,
+				9AA5D0FA1796E53B0036B677 /* Frameworks */,
+				9AA5D0F91796E53B0036B677 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9AA5D0F91796E53B0036B677 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9AA5D0F81796E53B0036B677 /* BrightBot Tester.app */,
+				9AA5D1211796E53C0036B677 /* BrightBot TesterTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9AA5D0FA1796E53B0036B677 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9AA5D0FB1796E53B0036B677 /* UIKit.framework */,
+				9AA5D0FD1796E53B0036B677 /* Foundation.framework */,
+				9AA5D0FF1796E53B0036B677 /* CoreGraphics.framework */,
+				9AA5D1221796E53C0036B677 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9AA5D1011796E53B0036B677 /* BrightBot Tester */ = {
+			isa = PBXGroup;
+			children = (
+				9A1C8D061797108E00B62D15 /* BrightBot.h */,
+				9A1C8D071797108E00B62D15 /* BrightBot.m */,
+				9A1C8D081797108E00B62D15 /* NSDataBase64.h */,
+				9A1C8D091797108E00B62D15 /* NSDataBase64.m */,
+				9AA5D10A1796E53B0036B677 /* AppDelegate.h */,
+				9AA5D10B1796E53B0036B677 /* AppDelegate.m */,
+				9AA5D1131796E53B0036B677 /* MainStoryboard_iPhone.storyboard */,
+				9AA5D1161796E53B0036B677 /* MainStoryboard_iPad.storyboard */,
+				9AA5D1191796E53B0036B677 /* ViewController.h */,
+				9AA5D11A1796E53B0036B677 /* ViewController.m */,
+				9AA5D1021796E53B0036B677 /* Supporting Files */,
+			);
+			path = "BrightBot Tester";
+			sourceTree = "<group>";
+		};
+		9AA5D1021796E53B0036B677 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9A1C8D0C17A1B08F00B62D15 /* data */,
+				9AA5D1031796E53B0036B677 /* BrightBot Tester-Info.plist */,
+				9AA5D1041796E53B0036B677 /* InfoPlist.strings */,
+				9AA5D1071796E53B0036B677 /* main.m */,
+				9AA5D1091796E53B0036B677 /* BrightBot Tester-Prefix.pch */,
+				9AA5D10D1796E53B0036B677 /* Default.png */,
+				9AA5D10F1796E53B0036B677 /* Default@2x.png */,
+				9AA5D1111796E53B0036B677 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9AA5D1281796E53C0036B677 /* BrightBot TesterTests */ = {
+			isa = PBXGroup;
+			children = (
+				9AA5D12E1796E53C0036B677 /* BrightBot_TesterTests.h */,
+				9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */,
+				9AA5D1291796E53C0036B677 /* Supporting Files */,
+			);
+			path = "BrightBot TesterTests";
+			sourceTree = "<group>";
+		};
+		9AA5D1291796E53C0036B677 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9AA5D12A1796E53C0036B677 /* BrightBot TesterTests-Info.plist */,
+				9AA5D12B1796E53C0036B677 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9AA5D0F71796E53B0036B677 /* BrightBot Tester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AA5D1331796E53C0036B677 /* Build configuration list for PBXNativeTarget "BrightBot Tester" */;
+			buildPhases = (
+				9AA5D0F41796E53B0036B677 /* Sources */,
+				9AA5D0F51796E53B0036B677 /* Frameworks */,
+				9AA5D0F61796E53B0036B677 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BrightBot Tester";
+			productName = "BrightBot Tester";
+			productReference = 9AA5D0F81796E53B0036B677 /* BrightBot Tester.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9AA5D1201796E53C0036B677 /* BrightBot TesterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AA5D1361796E53C0036B677 /* Build configuration list for PBXNativeTarget "BrightBot TesterTests" */;
+			buildPhases = (
+				9AA5D11C1796E53C0036B677 /* Sources */,
+				9AA5D11D1796E53C0036B677 /* Frameworks */,
+				9AA5D11E1796E53C0036B677 /* Resources */,
+				9AA5D11F1796E53C0036B677 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9AA5D1271796E53C0036B677 /* PBXTargetDependency */,
+			);
+			name = "BrightBot TesterTests";
+			productName = "BrightBot TesterTests";
+			productReference = 9AA5D1211796E53C0036B677 /* BrightBot TesterTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9AA5D0F01796E53B0036B677 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = BrightBot;
+			};
+			buildConfigurationList = 9AA5D0F31796E53B0036B677 /* Build configuration list for PBXProject "BrightBot Tester" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 9AA5D0EF1796E53B0036B677;
+			productRefGroup = 9AA5D0F91796E53B0036B677 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9AA5D0F71796E53B0036B677 /* BrightBot Tester */,
+				9AA5D1201796E53C0036B677 /* BrightBot TesterTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9AA5D0F61796E53B0036B677 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AA5D1061796E53B0036B677 /* InfoPlist.strings in Resources */,
+				9AA5D10E1796E53B0036B677 /* Default.png in Resources */,
+				9AA5D1101796E53B0036B677 /* Default@2x.png in Resources */,
+				9AA5D1121796E53B0036B677 /* Default-568h@2x.png in Resources */,
+				9AA5D1151796E53B0036B677 /* MainStoryboard_iPhone.storyboard in Resources */,
+				9AA5D1181796E53B0036B677 /* MainStoryboard_iPad.storyboard in Resources */,
+				9A1C8D0D17A1B08F00B62D15 /* data in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AA5D11E1796E53C0036B677 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AA5D12D1796E53C0036B677 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9AA5D11F1796E53C0036B677 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9AA5D0F41796E53B0036B677 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AA5D1081796E53B0036B677 /* main.m in Sources */,
+				9AA5D10C1796E53B0036B677 /* AppDelegate.m in Sources */,
+				9AA5D11B1796E53B0036B677 /* ViewController.m in Sources */,
+				9A1C8D0A1797108E00B62D15 /* BrightBot.m in Sources */,
+				9A1C8D0B1797108E00B62D15 /* NSDataBase64.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AA5D11C1796E53C0036B677 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AA5D1301796E53C0036B677 /* BrightBot_TesterTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9AA5D1271796E53C0036B677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9AA5D0F71796E53B0036B677 /* BrightBot Tester */;
+			targetProxy = 9AA5D1261796E53C0036B677 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9AA5D1041796E53B0036B677 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9AA5D1051796E53B0036B677 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		9AA5D1131796E53B0036B677 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9AA5D1141796E53B0036B677 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		9AA5D1161796E53B0036B677 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9AA5D1171796E53B0036B677 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		9AA5D12B1796E53C0036B677 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9AA5D12C1796E53C0036B677 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9AA5D1311796E53C0036B677 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9AA5D1321796E53C0036B677 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9AA5D1341796E53C0036B677 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BrightBot Tester/BrightBot Tester-Prefix.pch";
+				INFOPLIST_FILE = "BrightBot Tester/BrightBot Tester-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		9AA5D1351796E53C0036B677 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BrightBot Tester/BrightBot Tester-Prefix.pch";
+				INFOPLIST_FILE = "BrightBot Tester/BrightBot Tester-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		9AA5D1371796E53C0036B677 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BrightBot Tester.app/BrightBot Tester";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BrightBot Tester/BrightBot Tester-Prefix.pch";
+				INFOPLIST_FILE = "BrightBot TesterTests/BrightBot TesterTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		9AA5D1381796E53C0036B677 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BrightBot Tester.app/BrightBot Tester";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BrightBot Tester/BrightBot Tester-Prefix.pch";
+				INFOPLIST_FILE = "BrightBot TesterTests/BrightBot TesterTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9AA5D0F31796E53B0036B677 /* Build configuration list for PBXProject "BrightBot Tester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AA5D1311796E53C0036B677 /* Debug */,
+				9AA5D1321796E53C0036B677 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9AA5D1331796E53C0036B677 /* Build configuration list for PBXNativeTarget "BrightBot Tester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AA5D1341796E53C0036B677 /* Debug */,
+				9AA5D1351796E53C0036B677 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9AA5D1361796E53C0036B677 /* Build configuration list for PBXNativeTarget "BrightBot TesterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AA5D1371796E53C0036B677 /* Debug */,
+				9AA5D1381796E53C0036B677 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9AA5D0F01796E53B0036B677 /* Project object */;
+}

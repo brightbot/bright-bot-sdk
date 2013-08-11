@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="5">
+            <objects>
+                <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vyS-sL-q9N">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="42" id="bKZ-wF-gpI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Add Student">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addStudent:" destination="2" eventType="touchUpInside" id="7nB-Ed-piM"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="BrightBot Test Harness" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bdt-lR-GLB">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="52Y-oi-D98">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Get Students">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="getStudents:" destination="2" eventType="touchUpInside" id="jvl-mS-pLk"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xkj-8h-Keo">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="149" id="XQk-sq-t0D"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="login:" destination="2" eventType="touchUpInside" id="Jw4-9l-dh6"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cGh-Fl-gdf">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Get File Contents">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="getContents:" destination="2" eventType="touchUpInside" id="xcH-xT-D4t"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3EK-z4-l2W">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Add File Contents">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addContents:" destination="2" eventType="touchUpInside" id="qN2-0l-PTa"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yc2-Fq-0Be">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Remove Student">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="removeStudent:" destination="2" eventType="touchUpInside" id="WDO-mW-n3C"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xkj-8h-Keo" firstAttribute="centerX" secondItem="Bdt-lR-GLB" secondAttribute="centerX" type="default" id="5gG-Pi-6wR"/>
+                            <constraint firstItem="52Y-oi-D98" firstAttribute="top" secondItem="xkj-8h-Keo" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="8Ad-gu-zNo"/>
+                            <constraint firstItem="cGh-Fl-gdf" firstAttribute="top" secondItem="3EK-z4-l2W" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Aq2-6B-hHG"/>
+                            <constraint firstItem="Bdt-lR-GLB" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="CyU-jo-acT"/>
+                            <constraint firstItem="3EK-z4-l2W" firstAttribute="leading" secondItem="yc2-Fq-0Be" secondAttribute="leading" type="default" id="D4j-mm-idb"/>
+                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="top" secondItem="vyS-sL-q9N" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Fgx-HM-Tsl"/>
+                            <constraint firstItem="52Y-oi-D98" firstAttribute="trailing" secondItem="vyS-sL-q9N" secondAttribute="trailing" type="default" id="Mfs-Mj-Y6S"/>
+                            <constraint firstItem="vyS-sL-q9N" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="QR0-hj-BQ0"/>
+                            <constraint firstItem="vyS-sL-q9N" firstAttribute="top" secondItem="3" secondAttribute="top" constant="166" id="Qzu-5S-dl4"/>
+                            <constraint firstItem="cGh-Fl-gdf" firstAttribute="leading" secondItem="3EK-z4-l2W" secondAttribute="leading" type="default" id="SM3-z7-fWh"/>
+                            <constraint firstItem="3EK-z4-l2W" firstAttribute="trailing" secondItem="yc2-Fq-0Be" secondAttribute="trailing" type="default" id="ScG-fY-rRA"/>
+                            <constraint firstItem="vyS-sL-q9N" firstAttribute="leading" secondItem="52Y-oi-D98" secondAttribute="leading" type="default" id="VoM-ST-8MV"/>
+                            <constraint firstItem="52Y-oi-D98" firstAttribute="leading" secondItem="xkj-8h-Keo" secondAttribute="leading" type="default" id="Vqj-Qj-ENI"/>
+                            <constraint firstItem="xkj-8h-Keo" firstAttribute="top" secondItem="3" secondAttribute="top" constant="63" id="cIf-Ni-NFh"/>
+                            <constraint firstItem="3EK-z4-l2W" firstAttribute="top" secondItem="yc2-Fq-0Be" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ri7-JQ-Z8v"/>
+                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="trailing" secondItem="vyS-sL-q9N" secondAttribute="trailing" type="default" id="tBu-VV-g4N"/>
+                            <constraint firstItem="xkj-8h-Keo" firstAttribute="trailing" secondItem="52Y-oi-D98" secondAttribute="trailing" type="default" id="tM0-Uy-lcr"/>
+                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="leading" secondItem="vyS-sL-q9N" secondAttribute="leading" type="default" id="vc2-UW-trS"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="WWZ-tE-vHA"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addContents:"/>
+                <relationship kind="action" name="addStudent:"/>
+                <relationship kind="action" name="getContents:"/>
+                <relationship kind="action" name="getStudents:"/>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="action" name="removeStudent:"/>
+            </relationships>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
