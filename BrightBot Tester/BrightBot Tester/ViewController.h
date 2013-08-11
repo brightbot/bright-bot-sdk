@@ -9,7 +9,7 @@
 #define kAPIKey @"7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
 
 #import <UIKit/UIKit.h>
-#import "BrightBotSDK/BrightBot.h"
+#import "BrightBot.h"
 
 @interface ViewController : UIViewController <UIAlertViewDelegate> {
     BrightBot* api;

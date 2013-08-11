@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9A1C8D0A1797108E00B62D15 /* BrightBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A1C8D071797108E00B62D15 /* BrightBot.m */; };
-		9A1C8D0B1797108E00B62D15 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A1C8D091797108E00B62D15 /* NSDataBase64.m */; };
 		9A1C8D0D17A1B08F00B62D15 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 9A1C8D0C17A1B08F00B62D15 /* data */; };
 		9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FB1796E53B0036B677 /* UIKit.framework */; };
 		9AA5D0FE1796E53B0036B677 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FD1796E53B0036B677 /* Foundation.framework */; };
@@ -27,6 +25,10 @@
 		9AA5D1251796E53C0036B677 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FD1796E53B0036B677 /* Foundation.framework */; };
 		9AA5D12D1796E53C0036B677 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9AA5D12B1796E53C0036B677 /* InfoPlist.strings */; };
 		9AA5D1301796E53C0036B677 /* BrightBot_TesterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */; };
+		9AD7E08017B8415A0045DEC8 /* BrightBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07D17B8415A0045DEC8 /* BrightBot.m */; };
+		9AD7E08117B8415A0045DEC8 /* BrightBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07D17B8415A0045DEC8 /* BrightBot.m */; };
+		9AD7E08217B8415A0045DEC8 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */; };
+		9AD7E08317B8415A0045DEC8 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,10 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9A1C8D061797108E00B62D15 /* BrightBot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrightBot.h; path = BrightBotSDK/BrightBot.h; sourceTree = "<group>"; };
-		9A1C8D071797108E00B62D15 /* BrightBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrightBot.m; path = BrightBotSDK/BrightBot.m; sourceTree = "<group>"; };
-		9A1C8D081797108E00B62D15 /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataBase64.h; path = BrightBotSDK/NSDataBase64.h; sourceTree = "<group>"; };
-		9A1C8D091797108E00B62D15 /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataBase64.m; path = BrightBotSDK/NSDataBase64.m; sourceTree = "<group>"; };
 		9A1C8D0C17A1B08F00B62D15 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
 		9AA5D0F81796E53B0036B677 /* BrightBot Tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BrightBot Tester.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AA5D0FB1796E53B0036B677 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -68,6 +66,10 @@
 		9AA5D12C1796E53C0036B677 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9AA5D12E1796E53C0036B677 /* BrightBot_TesterTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrightBot_TesterTests.h; sourceTree = "<group>"; };
 		9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightBot_TesterTests.m; sourceTree = "<group>"; };
+		9AD7E07C17B8415A0045DEC8 /* BrightBot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrightBot.h; path = ../../BrightBotSDK/BrightBot.h; sourceTree = "<group>"; };
+		9AD7E07D17B8415A0045DEC8 /* BrightBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrightBot.m; path = ../../BrightBotSDK/BrightBot.m; sourceTree = "<group>"; };
+		9AD7E07E17B8415A0045DEC8 /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataBase64.h; path = ../../BrightBotSDK/NSDataBase64.h; sourceTree = "<group>"; };
+		9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataBase64.m; path = ../../BrightBotSDK/NSDataBase64.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,10 +129,10 @@
 		9AA5D1011796E53B0036B677 /* BrightBot Tester */ = {
 			isa = PBXGroup;
 			children = (
-				9A1C8D061797108E00B62D15 /* BrightBot.h */,
-				9A1C8D071797108E00B62D15 /* BrightBot.m */,
-				9A1C8D081797108E00B62D15 /* NSDataBase64.h */,
-				9A1C8D091797108E00B62D15 /* NSDataBase64.m */,
+				9AD7E07C17B8415A0045DEC8 /* BrightBot.h */,
+				9AD7E07D17B8415A0045DEC8 /* BrightBot.m */,
+				9AD7E07E17B8415A0045DEC8 /* NSDataBase64.h */,
+				9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */,
 				9AA5D10A1796E53B0036B677 /* AppDelegate.h */,
 				9AA5D10B1796E53B0036B677 /* AppDelegate.m */,
 				9AA5D1131796E53B0036B677 /* MainStoryboard_iPhone.storyboard */,
@@ -291,8 +293,8 @@
 				9AA5D1081796E53B0036B677 /* main.m in Sources */,
 				9AA5D10C1796E53B0036B677 /* AppDelegate.m in Sources */,
 				9AA5D11B1796E53B0036B677 /* ViewController.m in Sources */,
-				9A1C8D0A1797108E00B62D15 /* BrightBot.m in Sources */,
-				9A1C8D0B1797108E00B62D15 /* NSDataBase64.m in Sources */,
+				9AD7E08017B8415A0045DEC8 /* BrightBot.m in Sources */,
+				9AD7E08217B8415A0045DEC8 /* NSDataBase64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +303,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AA5D1301796E53C0036B677 /* BrightBot_TesterTests.m in Sources */,
+				9AD7E08117B8415A0045DEC8 /* BrightBot.m in Sources */,
+				9AD7E08317B8415A0045DEC8 /* NSDataBase64.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

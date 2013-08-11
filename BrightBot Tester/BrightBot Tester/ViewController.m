@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "BrightBotSDK/BrightBot.h"
+#import "BrightBot.h"
 
 @interface ViewController ()
 
