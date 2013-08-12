@@ -320,15 +320,26 @@ void (^authFinish)(NSMutableDictionary*);
 
 - (void)authenticate:(UIView *)theView success:(void (^)(NSMutableDictionary* authValues))success error:(void (^)(NSError* error))error {
     
-    UIWebView *webview=[[UIWebView alloc]initWithFrame:CGRectMake(0, 0,  320, 460)];
+    CGRect webFrame = CGRectMake(0, 0, 0, 0);
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        // iPhone Code
+        webFrame = CGRectMake(0, 0,  320, 460);
+    } else {
+        // iPad Code
+        webFrame = CGRectMake(0, 0, 480, 320);
+    }
+    
+    UIWebView *webview = [[UIWebView alloc] initWithFrame:webFrame];
     
     NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_login", kBrightBotAPIBase];
-
+    
     NSURL *nsurl=[NSURL URLWithString:urlString];
     NSURLRequest *nsrequest=[NSURLRequest requestWithURL:nsurl];
     [webview setDelegate:self];
     [webview loadRequest:nsrequest];
-        
+    
+    webview.center = theView.center;
+    
     [theView addSubview:webview];
     
     // Save the handler to call later

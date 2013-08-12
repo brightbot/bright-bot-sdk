@@ -64,7 +64,7 @@
 @property (nonatomic, copy) NSString *teacher_id;
 @property (nonatomic, copy) NSString *app_id;
 
-- (id)initAPI:(NSString *)api_key private_key:(NSString *)private_key teacher_id:(NSString *)teacher_id;
+- (id)initAPI:(NSString *)api_key private_key:(NSString *)private_key teacher_id:(NSString *)teacher_id app_id:(NSString *)app_id;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
