@@ -64,12 +64,14 @@
 @property (nonatomic, copy) NSString *teacher_id;
 @property (nonatomic, copy) NSString *app_id;
 
++ (BrightBot *)sharedInstance;
+
 - (id)initAPI:(NSString *)api_key private_key:(NSString *)private_key teacher_id:(NSString *)teacher_id app_id:(NSString *)app_id;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
 - (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error;
-- (void)authenticate:(UIView *)theView success:(void (^)(NSMutableDictionary* authValues))success error:(void (^)(NSError* error))error;
+- (void)authenticate:(void (^)(NSMutableDictionary* authValues))success error:(void (^)(NSError* error))error;
 
 @end

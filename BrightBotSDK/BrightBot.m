@@ -27,6 +27,19 @@ void (^authFinish)(NSMutableDictionary*);
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
++ (BrightBot *)sharedInstance
+{
+    static BrightBot *sharedInstance;
+    
+    @synchronized(self)
+    {
+        if (!sharedInstance)
+            sharedInstance = [BrightBot alloc];
+        
+        return sharedInstance;
+    }
+}
+
 - (id)initAPI:(NSString *)api_key private_key:(NSString *)private_key teacher_id:(NSString *)teacher_id app_id:(NSString *)app_id {
     if ((self = [super init])) {
         self.api_key = api_key;
@@ -318,7 +331,8 @@ void (^authFinish)(NSMutableDictionary*);
     
 }
 
-- (void)authenticate:(UIView *)theView success:(void (^)(NSMutableDictionary* authValues))success error:(void (^)(NSError* error))error {
+- (void)authenticate:(void (^)(NSMutableDictionary* authValues))success error:(void (^)(NSError* error))error {
+    UIView *theView = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
     
     CGRect webFrame = CGRectMake(0, 0, 0, 0);
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
