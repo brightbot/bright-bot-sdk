@@ -32,9 +32,15 @@ void (^authFinish)(NSMutableDictionary*);
     
     @synchronized(self)
     {
-        if (!sharedInstance)
+        // Init the API as well, if authenticated.
+        if (!sharedInstance) {
             sharedInstance = [BrightBot alloc];
-        
+            
+            if ( [sharedInstance isAuthenticated] ) {
+                [sharedInstance initAPI:NULL];
+            }
+        }
+            
         return sharedInstance;
     }
 }
@@ -43,15 +49,16 @@ void (^authFinish)(NSMutableDictionary*);
     NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
     NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
     NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
+    NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
     
-    if (private_key == nil || teacher_id == nil) {
+    if (private_key == nil || teacher_id == nil || api_key == nil) {
         return NO;
     } else {
         return YES;
     }
 }
 
-- (id)initAPI:(NSString *)api_key error:(NSError **)error {
+- (id)initAPI:(NSError **)error {
     if ((self = [super init])) {
         
         if ( ![self isAuthenticated] ) {
@@ -66,6 +73,7 @@ void (^authFinish)(NSMutableDictionary*);
             NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
             NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
             NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
+            NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
             
             self.api_key = api_key;
             self.private_key = private_key;
@@ -362,7 +370,10 @@ void (^authFinish)(NSMutableDictionary*);
     
 }
 
-- (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error {
+    // Save off the API key
+    self.api_key = api_key;
+    
     UIView *theView = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
     
     CGRect webFrame = CGRectMake(0, 0, 0, 0);
@@ -419,6 +430,7 @@ void (^authFinish)(NSMutableDictionary*);
         NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
         [standardUserDefaults setObject:self.private_key forKey:@"bb.private_key"];
         [standardUserDefaults setObject:self.teacher_id forKey:@"bb.teacher_id"];
+        [standardUserDefaults setObject:self.api_key forKey:@"bb.api_key"];
         [standardUserDefaults synchronize];
         
         // Close up shop, auth done
