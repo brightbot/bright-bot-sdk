@@ -27,8 +27,7 @@ void (^authFinish)(NSMutableDictionary*);
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
-+ (BrightBot *)sharedInstance
-{
++ (BrightBot *)sharedInstance {
     static BrightBot *sharedInstance;
     
     @synchronized(self)
@@ -40,12 +39,39 @@ void (^authFinish)(NSMutableDictionary*);
     }
 }
 
-- (id)initAPI:(NSString *)api_key private_key:(NSString *)private_key teacher_id:(NSString *)teacher_id app_id:(NSString *)app_id {
+- (BOOL)isAuthenticated {
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
+    NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
+    
+    if (private_key == nil || teacher_id == nil) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
+- (id)initAPI:(NSString *)api_key error:(NSError **)error {
     if ((self = [super init])) {
-        self.api_key = api_key;
-        self.private_key = private_key;
-        self.teacher_id = teacher_id;
-        self.app_id = app_id;
+        
+        if ( ![self isAuthenticated] ) {
+            // Set error if a pointer for the error was given
+            if (error != NULL) {
+                *error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                            code:100
+                            userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+            }
+            return nil;
+        } else {
+            NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+            NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
+            NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
+            
+            self.api_key = api_key;
+            self.private_key = private_key;
+            self.teacher_id = teacher_id;
+            self.app_id = [[NSBundle mainBundle] bundleIdentifier]; // Grab the bundle of the current app
+        }
     }
     
     return self;
@@ -285,11 +311,16 @@ void (^authFinish)(NSMutableDictionary*);
 }
 
 
-- (void)addStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)addStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+    
+    NSError *JSONerror;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
+        options:0
+        error:&JSONerror];
     
     NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
     
-    [self putData:path data:the_student success:^(NSData *data) {
+    [self putData:path data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
         success();
     } error:error ];
     
@@ -331,7 +362,7 @@ void (^authFinish)(NSMutableDictionary*);
     
 }
 
-- (void)authenticate:(void (^)(NSMutableDictionary* authValues))success error:(void (^)(NSError* error))error {
+- (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error {
     UIView *theView = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
     
     CGRect webFrame = CGRectMake(0, 0, 0, 0);
@@ -384,10 +415,11 @@ void (^authFinish)(NSMutableDictionary*);
         self.private_key = [kvPairs objectForKey:@"access_token"];
         self.teacher_id = [kvPairs objectForKey:@"teacher_id"];
         
-        NSMutableDictionary *authParams = [NSMutableDictionary dictionary];
-        [authParams setObject:self.private_key forKey:@"private_key"];
-        [authParams setObject:self.teacher_id forKey:@"teacher_id"];
-        authFinish(authParams);
+        // Save these in NSUserDefaults, TODO this is not secure but works well enough for now
+        NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
+        [standardUserDefaults setObject:self.private_key forKey:@"bb.private_key"];
+        [standardUserDefaults setObject:self.teacher_id forKey:@"bb.teacher_id"];
+        [standardUserDefaults synchronize];
         
         // Close up shop, auth done
         [ourWebView removeFromSuperview];
