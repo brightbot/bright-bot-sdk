@@ -23,7 +23,8 @@
 @synthesize webView;
 
 // Instance vars
-void (^authFinish)(NSMutableDictionary*);
+void (^authFinish)();
+UIViewController *authController;
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
@@ -374,7 +375,16 @@ void (^authFinish)(NSMutableDictionary*);
     // Save off the API key
     self.api_key = api_key;
     
-    UIView *theView = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
+    UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
+    authController = [[UIViewController alloc] init];
+    authController.modalPresentationStyle = UIModalPresentationFormSheet;
+    authController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+    [rootVC presentViewController:authController animated:YES completion:nil];
+    authController.view.superview.frame = CGRectMake(0,0, 540, 540); //it's important to do this after presentModalViewController
+    authController.view.superview.center = (UIInterfaceOrientationIsPortrait(rootVC.interfaceOrientation) ?
+                                CGPointMake(384, 512) : CGPointMake(512, 384));
+    
+    //UIView *theView = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
     
     CGRect webFrame = CGRectMake(0, 0, 0, 0);
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
@@ -394,9 +404,9 @@ void (^authFinish)(NSMutableDictionary*);
     [webview setDelegate:self];
     [webview loadRequest:nsrequest];
     
-    webview.center = theView.center;
+    webview.center = authController.view.center;
     
-    [theView addSubview:webview];
+    [authController.view addSubview:webview];
     
     // Save the handler to call later
     authFinish = [success copy];
@@ -433,8 +443,10 @@ void (^authFinish)(NSMutableDictionary*);
         [standardUserDefaults setObject:self.api_key forKey:@"bb.api_key"];
         [standardUserDefaults synchronize];
         
+        authFinish();
+        
         // Close up shop, auth done
-        [ourWebView removeFromSuperview];
+        [authController dismissModalViewControllerAnimated:YES];
         
         return YES;
     }
