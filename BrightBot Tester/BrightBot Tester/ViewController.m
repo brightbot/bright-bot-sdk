@@ -21,22 +21,6 @@ NSArray *our_students;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
-    if ( ! [[BrightBot sharedInstance] isAuthenticated] ) {
-        [[BrightBot sharedInstance] authenticate:kAPIKey
-        success:^() {
-         // Any finalization tasks
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Logged in!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-         [alert show];
-         [alert release];
-        }
-        error:^(NSError *error) {
-           NSLog(@"error authenticating %@", error);
-        }];
-        
-    } else {
-        // Is logged in
-    }
 
 }
 
@@ -51,9 +35,12 @@ NSArray *our_students;
 }
 
 - (IBAction)addStudent:(id)sender {
-    NSString* the_student = [NSString stringWithFormat:@"{\"name\":\"%@\"}", @"Zach"];
+ 
+    NSDictionary *studentData = @{
+        @"name" : @"Zach",
+    };
     
-    [[BrightBot sharedInstance] addStudent:the_student
+    [[BrightBot sharedInstance] addStudent:studentData
     success:^(void) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];

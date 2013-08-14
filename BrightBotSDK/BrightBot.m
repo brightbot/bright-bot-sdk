@@ -375,24 +375,26 @@ UIViewController *authController;
     // Save off the API key
     self.api_key = api_key;
     
+    // Apple specifies that a root view controller should exist for every app, so we rely on it here.
     UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
     authController = [[UIViewController alloc] init];
     authController.modalPresentationStyle = UIModalPresentationFormSheet;
     authController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     [rootVC presentViewController:authController animated:YES completion:nil];
-    authController.view.superview.frame = CGRectMake(0,0, 540, 540); //it's important to do this after presentModalViewController
-    authController.view.superview.center = (UIInterfaceOrientationIsPortrait(rootVC.interfaceOrientation) ?
-                                CGPointMake(384, 512) : CGPointMake(512, 384));
-    
-    //UIView *theView = [[UIApplication sharedApplication] keyWindow].rootViewController.view;
     
     CGRect webFrame = CGRectMake(0, 0, 0, 0);
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
         // iPhone Code
         webFrame = CGRectMake(0, 0,  320, 460);
+        authController.view.superview.frame = CGRectMake(0,0, 320, 460); //it's important to do this after presentModalViewController
+        authController.view.superview.center = (UIInterfaceOrientationIsPortrait(rootVC.interfaceOrientation) ?
+                                                CGPointMake(160, 220) : CGPointMake(220, 160));
     } else {
         // iPad Code
         webFrame = CGRectMake(0, 0, 480, 320);
+        authController.view.superview.frame = CGRectMake(0,0, 540, 540); //it's important to do this after presentModalViewController
+        authController.view.superview.center = (UIInterfaceOrientationIsPortrait(rootVC.interfaceOrientation) ?
+                                                CGPointMake(384, 512) : CGPointMake(512, 384));
     }
     
     UIWebView *webview = [[UIWebView alloc] initWithFrame:webFrame];
