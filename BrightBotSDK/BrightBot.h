@@ -60,7 +60,6 @@
 
 @property (nonatomic, copy) NSString *api_key;
 @property (nonatomic, copy) NSString *private_key;
-@property (nonatomic, retain) UIWebView *webView;
 @property (nonatomic, copy) NSString *teacher_id;
 @property (nonatomic, copy) NSString *app_id;
 
@@ -74,5 +73,6 @@
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
 - (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)signOut;
 
 @end

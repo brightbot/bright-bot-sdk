@@ -20,11 +20,11 @@
 @synthesize private_key = _private_key;
 @synthesize teacher_id = _teacher_id;
 @synthesize app_id = _app_id;
-@synthesize webView;
 
 // Instance vars
 void (^authFinish)();
 UIViewController *authController;
+UIWebView *thisWebView;
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
@@ -371,6 +371,29 @@ UIViewController *authController;
     
 }
 
+-(void)signOut {
+    
+    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_logout", kBrightBotAPIBase];
+    NSURL *nsUrl=[NSURL URLWithString:urlString];
+    
+    // Hidden webview to handle redirect
+    thisWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    [thisWebView setDelegate:self];
+    [thisWebView loadRequest:[NSURLRequest requestWithURL:nsUrl]];
+    
+    // Remove from the NSUserDefaults objects    
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.private_key"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.teacher_id"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.api_key"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // Clear out the local instance vars
+    self.api_key = nil;
+    self.private_key = nil;
+    self.teacher_id = nil;
+}
+
 - (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error {
     // Save off the API key
     self.api_key = api_key;
@@ -397,18 +420,18 @@ UIViewController *authController;
                                                 CGPointMake(384, 512) : CGPointMake(512, 384));
     }
     
-    UIWebView *webview = [[UIWebView alloc] initWithFrame:webFrame];
+    thisWebView = [[UIWebView alloc] initWithFrame:webFrame];
     
     NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_login", kBrightBotAPIBase];
     
-    NSURL *nsurl=[NSURL URLWithString:urlString];
-    NSURLRequest *nsrequest=[NSURLRequest requestWithURL:nsurl];
-    [webview setDelegate:self];
-    [webview loadRequest:nsrequest];
+    NSURL *nsUrl=[NSURL URLWithString:urlString];
+    NSURLRequest *nsrequest=[NSURLRequest requestWithURL:nsUrl];
+    [thisWebView setDelegate:self];
+    [thisWebView loadRequest:nsrequest];
     
-    webview.center = authController.view.center;
+    thisWebView.center = authController.view.center;
     
-    [authController.view addSubview:webview];
+    [authController.view addSubview:thisWebView];
     
     // Save the handler to call later
     authFinish = [success copy];
@@ -448,7 +471,10 @@ UIViewController *authController;
         authFinish();
         
         // Close up shop, auth done
-        [authController dismissModalViewControllerAnimated:YES];
+        [authController dismissViewControllerAnimated:NO completion:nil];
+        authController = nil;
+        [thisWebView setDelegate:nil];
+        thisWebView = nil;
         
         return YES;
     }
