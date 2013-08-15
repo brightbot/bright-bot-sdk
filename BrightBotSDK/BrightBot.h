@@ -62,10 +62,10 @@
 @property (nonatomic, copy) NSString *private_key;
 @property (nonatomic, copy) NSString *teacher_id;
 @property (nonatomic, copy) NSString *app_id;
+@property (nonatomic, assign) BOOL authenticated;
 
 + (BrightBot *)sharedInstance;
 
-- (BOOL)isAuthenticated;
 - (id)initAPI:(NSError **)error;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
