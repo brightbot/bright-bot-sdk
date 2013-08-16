@@ -101,27 +101,43 @@
                                     <action selector="removeStudent:" destination="2" eventType="touchUpInside" id="WDO-mW-n3C"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lae-rx-YaM">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Modify Student">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="modifyStudent:" destination="2" eventType="touchUpInside" id="cUv-bw-Xve"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="xkj-8h-Keo" firstAttribute="centerX" secondItem="Bdt-lR-GLB" secondAttribute="centerX" type="default" id="5gG-Pi-6wR"/>
+                            <constraint firstItem="vyS-sL-q9N" firstAttribute="trailing" secondItem="Lae-rx-YaM" secondAttribute="trailing" type="default" id="6bQ-ah-m7K"/>
                             <constraint firstItem="52Y-oi-D98" firstAttribute="top" secondItem="xkj-8h-Keo" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="8Ad-gu-zNo"/>
+                            <constraint firstItem="3EK-z4-l2W" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="9Hl-Xb-2B2"/>
                             <constraint firstItem="cGh-Fl-gdf" firstAttribute="top" secondItem="3EK-z4-l2W" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Aq2-6B-hHG"/>
                             <constraint firstItem="Bdt-lR-GLB" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="CyU-jo-acT"/>
                             <constraint firstItem="3EK-z4-l2W" firstAttribute="leading" secondItem="yc2-Fq-0Be" secondAttribute="leading" type="default" id="D4j-mm-idb"/>
-                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="top" secondItem="vyS-sL-q9N" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Fgx-HM-Tsl"/>
+                            <constraint firstItem="Lae-rx-YaM" firstAttribute="leading" secondItem="yc2-Fq-0Be" secondAttribute="leading" type="default" id="Dw9-f3-qPE"/>
+                            <constraint firstItem="Lae-rx-YaM" firstAttribute="top" secondItem="vyS-sL-q9N" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="JjE-1C-nrn"/>
                             <constraint firstItem="52Y-oi-D98" firstAttribute="trailing" secondItem="vyS-sL-q9N" secondAttribute="trailing" type="default" id="Mfs-Mj-Y6S"/>
-                            <constraint firstItem="vyS-sL-q9N" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="QR0-hj-BQ0"/>
                             <constraint firstItem="vyS-sL-q9N" firstAttribute="top" secondItem="3" secondAttribute="top" constant="166" id="Qzu-5S-dl4"/>
                             <constraint firstItem="cGh-Fl-gdf" firstAttribute="leading" secondItem="3EK-z4-l2W" secondAttribute="leading" type="default" id="SM3-z7-fWh"/>
                             <constraint firstItem="3EK-z4-l2W" firstAttribute="trailing" secondItem="yc2-Fq-0Be" secondAttribute="trailing" type="default" id="ScG-fY-rRA"/>
                             <constraint firstItem="vyS-sL-q9N" firstAttribute="leading" secondItem="52Y-oi-D98" secondAttribute="leading" type="default" id="VoM-ST-8MV"/>
                             <constraint firstItem="52Y-oi-D98" firstAttribute="leading" secondItem="xkj-8h-Keo" secondAttribute="leading" type="default" id="Vqj-Qj-ENI"/>
+                            <constraint firstItem="Lae-rx-YaM" firstAttribute="leading" secondItem="vyS-sL-q9N" secondAttribute="leading" type="default" id="c22-iP-w81"/>
                             <constraint firstItem="xkj-8h-Keo" firstAttribute="top" secondItem="3" secondAttribute="top" constant="63" id="cIf-Ni-NFh"/>
+                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="trailing" secondItem="Lae-rx-YaM" secondAttribute="trailing" type="default" id="kDT-HL-GiK"/>
                             <constraint firstItem="3EK-z4-l2W" firstAttribute="top" secondItem="yc2-Fq-0Be" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ri7-JQ-Z8v"/>
-                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="trailing" secondItem="vyS-sL-q9N" secondAttribute="trailing" type="default" id="tBu-VV-g4N"/>
                             <constraint firstItem="xkj-8h-Keo" firstAttribute="trailing" secondItem="52Y-oi-D98" secondAttribute="trailing" type="default" id="tM0-Uy-lcr"/>
-                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="leading" secondItem="vyS-sL-q9N" secondAttribute="leading" type="default" id="vc2-UW-trS"/>
+                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="top" secondItem="Lae-rx-YaM" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="vrG-D9-lxD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="WWZ-tE-vHA"/>
@@ -142,6 +158,7 @@
                 <relationship kind="action" name="getContents:"/>
                 <relationship kind="action" name="getStudents:"/>
                 <relationship kind="action" name="login:"/>
+                <relationship kind="action" name="modifyStudent:"/>
                 <relationship kind="action" name="removeStudent:"/>
             </relationships>
         </class>

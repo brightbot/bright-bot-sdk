@@ -129,59 +129,32 @@ UIWebView *thisWebView;
     return request;
 }
 
-- (void)putData:(NSString*)path data:(NSString*)data success:(void(^)(NSData* thisData))success
-          error:(void(^)(NSError* error))error {
+- (void)sendData:(NSString*)path method:(NSString*)method data:(NSString*)data success:(void(^)(NSData* thisData))success
+           error:(void(^)(NSError* error))error {
     
     NSMutableURLRequest* request = [self setupRequest:path];
-        
-    [request setHTTPMethod:@"PUT"];
+    
+    [request setHTTPMethod:method];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-type"];
     [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
     
     [NSURLConnection sendAsynchronousRequest:request
-                queue:[NSOperationQueue mainQueue]
-                completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-       if (!response && requestError) {
+               queue:[NSOperationQueue mainQueue]
+        completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+        if (!response && requestError) {
            if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
                requestError.code == NSURLErrorUserCancelledAuthentication) {
                error([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
                       [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-           } else { // TODO handle 1) api offline, 2) error response in json 
+           } else { // TODO handle 1) api offline, 2) error response in json
                NSLog(@"%@", requestError);
                error(requestError);
            }
            return;
-       }
-       success(body);
+        }
+        success(body);
     }];
 
-}
-
-- (void)deleteData:(NSString*)path data:(NSString*)data success:(void(^)(NSData* thisData))success
-          error:(void(^)(NSError* error))error {
-    
-    NSMutableURLRequest* request = [self setupRequest:path];
-    
-    [request setHTTPMethod:@"DELETE"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-type"];
-    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [NSURLConnection sendAsynchronousRequest:request
-                   queue:[NSOperationQueue mainQueue]
-       completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-           if (!response && requestError) {
-               if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
-                   requestError.code == NSURLErrorUserCancelledAuthentication) {
-                   error([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
-                          [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-               } else { // TODO handle 1) api offline, 2) error response in json
-                   NSLog(@"%@", requestError);
-                   error(requestError);
-               }
-               return;
-           }
-           success(body);
-       }];
     
 }
 
@@ -327,7 +300,7 @@ UIWebView *thisWebView;
                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
     } else {
-
+    
         NSError *JSONerror;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
             options:0
@@ -335,14 +308,15 @@ UIWebView *thisWebView;
         
         NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
         
-        [self putData:path data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
+        [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
             success();
         } error:error ];
     }
     
 }
 
-- (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)modifyStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+    
     if ( ![self authenticated] ) {
         // Set error if a pointer for the error was given
         if (error != NULL) {
@@ -351,10 +325,29 @@ UIWebView *thisWebView;
                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
     } else {
-        
         NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
         
-        [self deleteData:path data:the_student success:^(NSData *data) {
+        [self sendData:path method:@"PUT" data:the_student success:^(NSData *data) {
+            success();
+        } error:error ];
+    }
+    
+}
+
+- (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                        code:100
+                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+        }
+    } else {
+    
+        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        
+        [self sendData:path method:@"DELETE" data:the_student success:^(NSData *data) {
             success();
         } error:error ];
     }
