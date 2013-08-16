@@ -16,17 +16,19 @@
 
 @implementation BrightBot 
 
-@synthesize api_key = _api_key;
-@synthesize private_key = _private_key;
-@synthesize teacher_id = _teacher_id;
-@synthesize app_id = _app_id;
-@synthesize webView;
-
 // Instance vars
 void (^authFinish)();
 UIViewController *authController;
+UIWebView *thisWebView;
 
 // TODO need to make sure that the API is initialized before allowing any calls
+
+-(id)init {
+    self = [super init];
+    if(self) {
+        [self setAuthenticated:NO];
+    }
+}
 
 + (BrightBot *)sharedInstance {
     static BrightBot *sharedInstance;
@@ -37,7 +39,7 @@ UIViewController *authController;
         if (!sharedInstance) {
             sharedInstance = [BrightBot alloc];
             
-            if ( [sharedInstance isAuthenticated] ) {
+            if ( [sharedInstance authenticated] ) {
                 [sharedInstance initAPI:NULL];
             }
         }
@@ -46,23 +48,10 @@ UIViewController *authController;
     }
 }
 
-- (BOOL)isAuthenticated {
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
-    NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
-    NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
-    
-    if (private_key == nil || teacher_id == nil || api_key == nil) {
-        return NO;
-    } else {
-        return YES;
-    }
-}
-
 - (id)initAPI:(NSError **)error {
     if ((self = [super init])) {
         
-        if ( ![self isAuthenticated] ) {
+        if ( ![self authenticated] ) {
             // Set error if a pointer for the error was given
             if (error != NULL) {
                 *error = [NSError errorWithDomain:@"com.brightbot.sdk"
@@ -280,78 +269,158 @@ UIViewController *authController;
 
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
-    [self getJSON:path success:^(NSDictionary* json) {
-        NSMutableArray* bbStudents = [[NSMutableArray alloc] init];
-        for (NSDictionary* jsonStudent in [json objectForKey:@"data"]) {
-            BBStudent* bbStudent = [[BBStudent alloc] initWithResponseDictionary:jsonStudent];
-            [bbStudents addObject:bbStudent];
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                         code:100
+                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
-        success(bbStudents);
-    } error:error ];
+    } else {
+        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        [self getJSON:path success:^(NSDictionary* json) {
+            NSMutableArray* bbStudents = [[NSMutableArray alloc] init];
+            for (NSDictionary* jsonStudent in [json objectForKey:@"data"]) {
+                BBStudent* bbStudent = [[BBStudent alloc] initWithResponseDictionary:jsonStudent];
+                [bbStudents addObject:bbStudent];
+            }
+            success(bbStudents);
+        } error:error ];
+    }
 
 }
 
 
 - (void)addStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                        code:100
+                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+        }
+    } else {
     
-    NSError *JSONerror;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
-        options:0
-        error:&JSONerror];
-    
-    NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
-    
-    [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
-        success();
-    } error:error ];
+        NSError *JSONerror;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
+            options:0
+            error:&JSONerror];
+        
+        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        
+        [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
+            success();
+        } error:error ];
+    }
     
 }
 
 - (void)modifyStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
-    
-    [self sendData:path method:@"PUT" data:the_student success:^(NSData *data) {
-        success();
-    } error:error ];
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                        code:100
+                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+        }
+    } else {
+        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        
+        [self sendData:path method:@"PUT" data:the_student success:^(NSData *data) {
+            success();
+        } error:error ];
+    }
     
 }
 
 - (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                        code:100
+                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+        }
+    } else {
     
-    NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
-    
-    [self sendData:path method:@"DELETE" data:the_student success:^(NSData *data) {
-        success();
-    } error:error ];
+        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        
+        [self sendData:path method:@"DELETE" data:the_student success:^(NSData *data) {
+            success();
+        } error:error ];
+    }
     
 }
 
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
-    [self getJSON:path success:^(NSDictionary* json) {
-        NSMutableArray* bbFileContents = [[NSMutableArray alloc] init];
-        for (NSDictionary* jsonFileContent in [json objectForKey:@"data"]) {
-            BBFileContent* bbContent = [[BBFileContent alloc] initWithResponseDictionary:jsonFileContent];
-            [bbFileContents addObject:bbContent];
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                        code:100
+                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
-        success(bbFileContents);
-    } error:error ];
+    } else {
+        NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
+        [self getJSON:path success:^(NSDictionary* json) {
+            NSMutableArray* bbFileContents = [[NSMutableArray alloc] init];
+            for (NSDictionary* jsonFileContent in [json objectForKey:@"data"]) {
+                BBFileContent* bbContent = [[BBFileContent alloc] initWithResponseDictionary:jsonFileContent];
+                [bbFileContents addObject:bbContent];
+            }
+            success(bbFileContents);
+        } error:error ];
+    }
     
 }
 
 - (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error {
     
-    // Transform the passed in content to our internal JSON format
-    NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", self.app_id, content_data];
+    if ( ![self authenticated] ) {
+        // Set error if a pointer for the error was given
+        if (error != NULL) {
+            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+                                        code:100
+                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+        }
+    } else {
+        // Transform the passed in content to our internal JSON format
+        NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", self.app_id, content_data];
+        
+        NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
+        [self postFile:path data:transformedContent file:the_file success:^(NSData *json) {
+            success();
+        } error:error ];
+    }
     
-    NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
-    [self postFile:path data:transformedContent file:the_file success:^(NSData *json) {
-        success();
-    } error:error ];
+}
+
+-(void)signOut {
     
+    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_logout", kBrightBotAPIBase];
+    NSURL *nsUrl=[NSURL URLWithString:urlString];
+    
+    // Hidden webview to handle redirect
+    thisWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    [thisWebView setDelegate:self];
+    [thisWebView loadRequest:[NSURLRequest requestWithURL:nsUrl]];
+    
+    // Remove from the NSUserDefaults objects    
+    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.private_key"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.teacher_id"];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.api_key"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // Clear out the local instance vars
+    self.api_key = nil;
+    self.private_key = nil;
+    self.teacher_id = nil;
+    
+    [self setAuthenticated:NO];
 }
 
 - (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error {
@@ -380,18 +449,18 @@ UIViewController *authController;
                                                 CGPointMake(384, 512) : CGPointMake(512, 384));
     }
     
-    UIWebView *webview = [[UIWebView alloc] initWithFrame:webFrame];
+    thisWebView = [[UIWebView alloc] initWithFrame:webFrame];
     
     NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_login", kBrightBotAPIBase];
     
-    NSURL *nsurl=[NSURL URLWithString:urlString];
-    NSURLRequest *nsrequest=[NSURLRequest requestWithURL:nsurl];
-    [webview setDelegate:self];
-    [webview loadRequest:nsrequest];
+    NSURL *nsUrl=[NSURL URLWithString:urlString];
+    NSURLRequest *nsrequest=[NSURLRequest requestWithURL:nsUrl];
+    [thisWebView setDelegate:self];
+    [thisWebView loadRequest:nsrequest];
     
-    webview.center = authController.view.center;
+    thisWebView.center = authController.view.center;
     
-    [authController.view addSubview:webview];
+    [authController.view addSubview:thisWebView];
     
     // Save the handler to call later
     authFinish = [success copy];
@@ -428,10 +497,15 @@ UIViewController *authController;
         [standardUserDefaults setObject:self.api_key forKey:@"bb.api_key"];
         [standardUserDefaults synchronize];
         
+        [self setAuthenticated:YES];
+        
         authFinish();
         
         // Close up shop, auth done
-        [authController dismissModalViewControllerAnimated:YES];
+        [authController dismissViewControllerAnimated:NO completion:nil];
+        authController = nil;
+        [thisWebView setDelegate:nil];
+        thisWebView = nil;
         
         return YES;
     }

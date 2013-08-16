@@ -63,7 +63,7 @@ NSArray *our_students;
 }
 
 - (IBAction)login:(id)sender {
-    if ( ! [[BrightBot sharedInstance] isAuthenticated] ) {
+    if ( ! [[BrightBot sharedInstance] authenticated] ) {
         [[BrightBot sharedInstance] authenticate:kAPIKey
          success:^() {
              // Any finalization tasks
