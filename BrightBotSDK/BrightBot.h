@@ -70,6 +70,7 @@
 - (id)initAPI:(NSError **)error;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)modifyStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
 - (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error;

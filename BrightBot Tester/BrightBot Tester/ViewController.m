@@ -150,4 +150,28 @@ NSArray *our_students;
           }];
     }
 }
+
+- (IBAction)modifyStudent:(id)sender {
+    if (our_students == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    } else {
+        // We're good, we have students
+        BBStudent *first_student = [our_students objectAtIndex:0];
+        
+        NSString* the_student = [NSString stringWithFormat:@"{\"id\":\"%@\", \"name\":\"NewName\"}", first_student.guid];
+        
+        [[BrightBot sharedInstance] modifyStudent:the_student
+            success:^(void) {
+              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+              [alert show];
+              [alert release];
+            }
+            error:^(NSError* error) {
+                NSLog(@"error removing student %@", error);
+            }];
+    }
+    
+}
 @end
