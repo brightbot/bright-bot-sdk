@@ -415,8 +415,7 @@ UIWebView *thisWebView;
     [thisWebView setDelegate:self];
     [thisWebView loadRequest:[NSURLRequest requestWithURL:nsUrl]];
     
-    // Remove from the NSUserDefaults objects    
-    NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+    // Remove from the NSUserDefaults objects
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.private_key"];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.teacher_id"];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.api_key"];
