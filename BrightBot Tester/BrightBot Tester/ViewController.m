@@ -22,6 +22,12 @@ NSArray *our_students;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 
+    if ( [[BrightBot sharedInstance] authenticated] ) {
+        [[self loginButton] setTitle:@"Log out" forState:UIControlStateNormal];
+    } else {
+        [[self loginButton] setTitle:@"Log in" forState:UIControlStateNormal];
+    }
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -31,6 +37,7 @@ NSArray *our_students;
 }
 
 - (void)dealloc {
+    [_loginButton release];
     [super dealloc];
 }
 
@@ -70,13 +77,16 @@ NSArray *our_students;
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Logged in!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
              [alert release];
+             [sender setTitle:@"Log out" forState:UIControlStateNormal];
          }
            error:^(NSError *error) {
                NSLog(@"error authenticating %@", error);
            }];
         
     } else {
-        // Is logged in
+        // Is logged in, so log them out
+        [[BrightBot sharedInstance] signOut];
+        [sender setTitle:@"Log in" forState:UIControlStateNormal];
     }
 }
 

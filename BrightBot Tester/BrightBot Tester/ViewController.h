@@ -15,6 +15,7 @@
     BrightBot* api;
     NSArray* our_students;
 }
+@property (retain, nonatomic) IBOutlet UIButton *loginButton;
 - (IBAction)addStudent:(id)sender;
 - (IBAction)getStudents:(id)sender;
 - (IBAction)login:(id)sender;
