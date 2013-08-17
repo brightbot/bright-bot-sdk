@@ -4,7 +4,7 @@
 //  Created by Zach Hendershot on 7/2013.
 //  Copyright (c) 2013 BrightBot Inc. All rights reserved.
 //
-#define kBrightBotAPIBase @"http://api.brightbot.co" //:10080"
+#define kBrightBotAPIBase @"http://api.localhost:10080" //:10080"
 
 @interface BBFileContent : NSObject
 @property (strong, nonatomic) NSString* guid;

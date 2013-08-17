@@ -26,8 +26,19 @@ UIWebView *thisWebView;
 -(id)init {
     self = [super init];
     if(self) {
-        [self setAuthenticated:NO];
+        // Check to see if we're authenticated
+        NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
+        NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
+        NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
+        NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
+        
+        if (private_key && teacher_id && api_key) {
+            [self setAuthenticated:YES];
+        } else {
+            [self setAuthenticated:NO];
+        }
     }
+    return self;
 }
 
 + (BrightBot *)sharedInstance {
@@ -37,7 +48,7 @@ UIWebView *thisWebView;
     {
         // Init the API as well, if authenticated.
         if (!sharedInstance) {
-            sharedInstance = [BrightBot alloc];
+            sharedInstance = [[BrightBot alloc] init];
             
             if ( [sharedInstance authenticated] ) {
                 [sharedInstance initAPI:NULL];
@@ -131,16 +142,17 @@ UIWebView *thisWebView;
 
 - (void)sendData:(NSString*)path method:(NSString*)method data:(NSString*)data success:(void(^)(NSData* thisData))success
            error:(void(^)(NSError* error))error {
-    
     NSMutableURLRequest* request = [self setupRequest:path];
     
     [request setHTTPMethod:method];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-type"];
-    [request setHTTPBody:[data dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+    
+    NSString *postString = [NSString stringWithFormat:@"data=%@",data];
+    [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
     [NSURLConnection sendAsynchronousRequest:request
-               queue:[NSOperationQueue mainQueue]
-        completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+           queue:[NSOperationQueue mainQueue]
+    completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
         if (!response && requestError) {
            if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
                requestError.code == NSURLErrorUserCancelledAuthentication) {
@@ -154,12 +166,12 @@ UIWebView *thisWebView;
         }
         success(body);
     }];
-
+    
     
 }
 
 
--(void)postFile:(NSString*)path data:(NSString*)data file:(NSData*)this_file success:(void(^)(NSData* thisData))success
+-(void)postFile:(NSString*)path data:(NSString*)data file_contents:(NSMutableDictionary*)file_contents success:(void(^)(NSData* thisData))success
           error:(void(^)(NSError* error))error {
     
     NSMutableURLRequest* request = [self setupRequest:path];
@@ -173,14 +185,19 @@ UIWebView *thisWebView;
     [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
     
     NSMutableData *body = [NSMutableData data];
-    [body appendData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"content\"; filename=\"content.zip\"\r\n"
-                      dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n"
-                      dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[NSData dataWithData:this_file]];
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     
+    // Do this for each file_content file object we have
+    for(id key in file_contents) {
+        NSData *this_file = [file_contents objectForKey:key];
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@.file\"\r\n",(NSString*)key,(NSString*)key] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n"
+                          dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[NSData dataWithData:this_file]];
+    }
+    
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[@"Content-Disposition: form-data; name=\"data\";\r\n\r\n"
                       dataUsingEncoding:NSUTF8StringEncoding]];
     [body appendData:[data dataUsingEncoding:NSUTF8StringEncoding]];
@@ -301,16 +318,42 @@ UIWebView *thisWebView;
         }
     } else {
     
-        NSError *JSONerror;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
-            options:0
-            error:&JSONerror];
+        // Check to see if the_student has NSData (files) in the dictionary
+        NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
+        NSMutableDictionary *student_files = [NSMutableDictionary
+                                     dictionaryWithDictionary:@{}];
+        
+        for(id key in the_student) {
+            id this_value = [the_student objectForKey:key];
+            
+            if ([this_value isKindOfClass:[NSData class]]) {
+              
+                // Remove this object from the student textual data and move to a new object
+                [student_dictionary removeObjectForKey:key];
+                [student_files setObject:this_value forKey:key];
+                
+            }
+        }
         
         NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
         
-        [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
-            success();
-        } error:error ];
+        NSError *JSONerror;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
+                                                           options:0
+                                                             error:&JSONerror];
+        
+        if ([student_files count] > 0) {
+            // We have data files
+            
+            [self postFile:path data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+                file_contents:student_files success:^(NSData *json) {
+                success();
+            } error:error ];
+        } else {
+            [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
+                success();
+            } error:error ];
+        }
     }
     
 }
@@ -391,7 +434,12 @@ UIWebView *thisWebView;
         NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", self.app_id, content_data];
         
         NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
-        [self postFile:path data:transformedContent file:the_file success:^(NSData *json) {
+        
+        NSMutableDictionary *file_contents = [NSMutableDictionary
+                                     dictionaryWithDictionary:@{
+                                     @"content" : the_file,
+                                     }];
+        [self postFile:path data:transformedContent file_contents:file_contents success:^(NSData *json) {
             success();
         } error:error ];
     }

@@ -58,6 +58,29 @@ NSArray *our_students;
     }];
 }
 
+- (IBAction)addStudentContent:(id)sender {
+    
+    NSString* filePath = [[NSBundle mainBundle] pathForResource:@"example_profile_pic"
+                                                         ofType:@"png" inDirectory:@"data"];
+    NSData* the_profile_picture = [[NSFileManager defaultManager] contentsAtPath:filePath];
+
+    
+    NSDictionary *studentData = @{
+        @"name" : @"Zach",
+        @"profile_picture" : the_profile_picture
+    };
+
+    [[BrightBot sharedInstance] addStudent:studentData
+        success:^(void) {
+           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+           [alert show];
+           [alert release];
+        }
+         error:^(NSError* error) {
+             NSLog(@"error retrieving students %@", error);
+         }];
+}
+
 - (IBAction)getStudents:(id)sender {
     [[BrightBot sharedInstance] getStudents:^(NSArray* students) {
         for (BBStudent* student in students) {
@@ -147,7 +170,9 @@ NSArray *our_students;
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
         
-        NSString* the_student = [NSString stringWithFormat:@"{\"id\":\"%@\"}", first_student.guid];
+        NSDictionary *studentData = @{
+            @"id" : first_student.guid,
+        };
         
         [[BrightBot sharedInstance] removeStudent:the_student
         success:^(void) {

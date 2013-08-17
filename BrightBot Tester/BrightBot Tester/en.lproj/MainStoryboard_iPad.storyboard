@@ -14,6 +14,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eek-vq-trV">
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="149" id="GSa-81-1gb"/>
                                     <constraint firstAttribute="height" constant="42" id="tDh-KE-YcL"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -109,28 +110,45 @@
                                     <action selector="modifyStudent:" destination="2" eventType="touchUpInside" id="L8c-Tx-Oaf"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VUJ-hn-oyH">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="131" id="i8I-Qx-omv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="w/ Content">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="addStudentContent:" destination="2" eventType="touchUpInside" id="spu-ms-tpx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="HVA-Ih-FIL" secondAttribute="centerX" type="user" id="3hv-mg-h1B"/>
-                            <constraint firstItem="Eek-vq-trV" firstAttribute="leading" secondItem="8TE-Aa-1Pv" secondAttribute="leading" type="default" id="7TR-Xe-bwr"/>
+                            <constraint firstItem="rjm-EV-8uG" firstAttribute="leading" secondItem="8TE-Aa-1Pv" secondAttribute="leading" type="default" id="5Xg-6b-Zhh"/>
+                            <constraint firstItem="VUJ-hn-oyH" firstAttribute="baseline" secondItem="Eek-vq-trV" secondAttribute="baseline" type="default" id="5v4-ad-C8X"/>
                             <constraint firstItem="Tv0-4d-1XT" firstAttribute="top" secondItem="17R-9d-axj" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="9WN-LB-N7c"/>
                             <constraint firstItem="rjm-EV-8uG" firstAttribute="top" secondItem="Eek-vq-trV" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="AxY-rN-N3F"/>
                             <constraint firstItem="8TE-Aa-1Pv" firstAttribute="top" secondItem="HVA-Ih-FIL" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Bd3-bf-Pek"/>
+                            <constraint firstItem="VUJ-hn-oyH" firstAttribute="leading" secondItem="Eek-vq-trV" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Eqj-zN-NZ6"/>
                             <constraint firstItem="PdS-Wu-kJx" firstAttribute="top" secondItem="Tv0-4d-1XT" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="M0F-Zm-ZnT"/>
-                            <constraint firstItem="17R-9d-axj" firstAttribute="centerX" secondItem="5" secondAttribute="centerX" type="default" id="M7B-Gm-cnQ"/>
                             <constraint firstItem="Eek-vq-trV" firstAttribute="top" secondItem="5" secondAttribute="top" constant="430" id="MGX-2k-enU"/>
-                            <constraint firstItem="rjm-EV-8uG" firstAttribute="leading" secondItem="Eek-vq-trV" secondAttribute="leading" type="default" id="W5v-SZ-pbs"/>
                             <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="rjm-EV-8uG" secondAttribute="centerX" type="user" id="WEF-3v-8GF"/>
+                            <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="5" secondAttribute="centerX" type="default" id="XvM-OA-2iK"/>
                             <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="Tv0-4d-1XT" secondAttribute="centerX" type="user" id="ZVY-Ep-NL8"/>
-                            <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="Eek-vq-trV" secondAttribute="centerX" type="user" id="d4G-2G-FYw"/>
                             <constraint firstItem="Tv0-4d-1XT" firstAttribute="leading" secondItem="17R-9d-axj" secondAttribute="leading" type="default" id="dw2-rn-20f"/>
                             <constraint firstItem="17R-9d-axj" firstAttribute="leading" secondItem="rjm-EV-8uG" secondAttribute="leading" type="default" id="fGR-y1-RAA"/>
                             <constraint firstItem="8TE-Aa-1Pv" firstAttribute="leading" secondItem="HVA-Ih-FIL" secondAttribute="leading" type="default" id="k9P-s1-fDd"/>
+                            <constraint firstItem="Eek-vq-trV" firstAttribute="leading" secondItem="5" secondAttribute="leading" constant="229" id="lb0-eL-Wxn"/>
                             <constraint firstItem="17R-9d-axj" firstAttribute="top" secondItem="rjm-EV-8uG" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="mrk-MW-JFN"/>
                             <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="17R-9d-axj" secondAttribute="centerX" type="user" id="pYD-gm-WAe"/>
-                            <constraint firstItem="PdS-Wu-kJx" firstAttribute="centerX" secondItem="8TE-Aa-1Pv" secondAttribute="centerX" type="user" id="vOd-JA-Mmi"/>
                             <constraint firstItem="HVA-Ih-FIL" firstAttribute="top" secondItem="5" secondAttribute="top" constant="327" id="vZr-pX-5P6"/>
+                            <constraint firstItem="8TE-Aa-1Pv" firstAttribute="trailing" secondItem="HVA-Ih-FIL" secondAttribute="trailing" type="default" id="zDB-90-plE"/>
                         </constraints>
                     </view>
                     <connections>
@@ -142,6 +160,25 @@
             <point key="canvasLocation" x="-56" y="-327"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addContents:"/>
+                <relationship kind="action" name="addStudent:"/>
+                <relationship kind="action" name="addStudentContent:"/>
+                <relationship kind="action" name="getContents:"/>
+                <relationship kind="action" name="getStudents:"/>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="action" name="modifyStudent:"/>
+                <relationship kind="action" name="removeStudent:"/>
+                <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

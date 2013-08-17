@@ -17,6 +17,7 @@
 }
 @property (retain, nonatomic) IBOutlet UIButton *loginButton;
 - (IBAction)addStudent:(id)sender;
+- (IBAction)addStudentContent:(id)sender;
 - (IBAction)getStudents:(id)sender;
 - (IBAction)login:(id)sender;
 - (IBAction)getContents:(id)sender;
