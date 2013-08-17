@@ -23,21 +23,28 @@ UIWebView *thisWebView;
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
--(id)init {
+- (id)init
+{
     self = [super init];
     if(self) {
-        // Check to see if we're authenticated
+
         NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
         NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
         NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
         NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
-        
+
+        self.api_key = api_key;
+        self.private_key = private_key;
+        self.teacher_id = teacher_id;
+        self.app_id = [[NSBundle mainBundle] bundleIdentifier]; // Grab the bundle of the current app
+
         if (private_key && teacher_id && api_key) {
             [self setAuthenticated:YES];
         } else {
             [self setAuthenticated:NO];
         }
     }
+
     return self;
 }
 
@@ -46,45 +53,13 @@ UIWebView *thisWebView;
     
     @synchronized(self)
     {
-        // Init the API as well, if authenticated.
-        if (!sharedInstance) {
+        if (sharedInstance == nil) {
+
             sharedInstance = [[BrightBot alloc] init];
-            
-            if ( [sharedInstance authenticated] ) {
-                [sharedInstance initAPI:NULL];
-            }
         }
-            
+        
         return sharedInstance;
     }
-}
-
-// TODO, can I remove this?
-- (id)initAPI:(NSError **)error {
-    if ((self = [super init])) {
-        
-        if ( ![self authenticated] ) {
-            // Set error if a pointer for the error was given
-            if (error != NULL) {
-                *error = [NSError errorWithDomain:@"com.brightbot.sdk"
-                            code:100
-                            userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-            }
-            return nil;
-        } else {
-            NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-            NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
-            NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
-            NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
-            
-            self.api_key = api_key;
-            self.private_key = private_key;
-            self.teacher_id = teacher_id;
-            self.app_id = [[NSBundle mainBundle] bundleIdentifier]; // Grab the bundle of the current app
-        }
-    }
-    
-    return self;
 }
 
 // JSON fetch boilerplate
@@ -291,9 +266,10 @@ UIWebView *thisWebView;
     if ( ![self authenticated] ) {
         // Set error if a pointer for the error was given
         if (error != NULL) {
-            error = [NSError errorWithDomain:@"com.brightbot.sdk"
+            NSError *err = [NSError errorWithDomain:@"com.brightbot.sdk"
                                          code:100
                                      userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
+            error(err);
         }
     } else {
         NSString* path = [NSString stringWithFormat:@"/students"];
@@ -310,7 +286,7 @@ UIWebView *thisWebView;
 }
 
 
-- (void)addStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error {
     if ( ![self authenticated] ) {
         // Set error if a pointer for the error was given
         if (error != NULL) {
@@ -349,11 +325,11 @@ UIWebView *thisWebView;
             
             [self postFile:path data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
                 file_contents:student_files success:^(NSData *json) {
-                success();
+                success(json);
             } error:error ];
         } else {
             [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
-                success();
+                success(data);
             } error:error ];
         }
     }

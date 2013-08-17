@@ -48,7 +48,7 @@ NSArray *our_students;
     };
     
     [[BrightBot sharedInstance] addStudent:studentData
-    success:^(void) {
+    success:^(id data) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         [alert release];
@@ -70,7 +70,7 @@ NSArray *our_students;
     };
 
     [[BrightBot sharedInstance] addStudent:studentData
-        success:^(void) {
+        success:^(id data) {
            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
            [alert show];
            [alert release];

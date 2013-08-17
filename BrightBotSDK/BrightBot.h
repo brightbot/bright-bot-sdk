@@ -4,7 +4,9 @@
 //  Created by Zach Hendershot on 7/2013.
 //  Copyright (c) 2013 BrightBot Inc. All rights reserved.
 //
-#define kBrightBotAPIBase @"http://api.brightbot.co" //:10080"
+
+//#define kBrightBotAPIBase @"http://api.localhost:10080" //:10080"
+#define kBrightBotAPIBase @"http://api.brightbot.co"
 
 @interface BBFileContent : NSObject
 @property (strong, nonatomic) NSString* guid;
@@ -68,7 +70,7 @@
 
 - (id)initAPI:(NSError **)error;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
-- (void)addStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
 - (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
