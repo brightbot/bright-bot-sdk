@@ -64,7 +64,6 @@ NSArray *our_students;
                                                          ofType:@"png" inDirectory:@"data"];
     NSData* the_profile_picture = [[NSFileManager defaultManager] contentsAtPath:filePath];
 
-    
     NSDictionary *studentData = @{
         @"name" : @"Zach",
         @"profile_picture" : the_profile_picture
@@ -174,7 +173,7 @@ NSArray *our_students;
             @"id" : first_student.guid,
         };
         
-        [[BrightBot sharedInstance] removeStudent:the_student
+        [[BrightBot sharedInstance] removeStudent:studentData
         success:^(void) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was removed." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
@@ -195,9 +194,12 @@ NSArray *our_students;
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
         
-        NSString* the_student = [NSString stringWithFormat:@"{\"id\":\"%@\", \"name\":\"NewName\"}", first_student.guid];
-        
-        [[BrightBot sharedInstance] modifyStudent:the_student
+        NSDictionary *studentData = @{
+          @"id" : first_student.guid,
+          @"name" : @"NewName"
+          };
+                
+        [[BrightBot sharedInstance] modifyStudent:studentData
             success:^(void) {
               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
               [alert show];

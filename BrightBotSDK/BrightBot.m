@@ -135,6 +135,7 @@ UIWebView *thisWebView;
     [request setValue:signature forHTTPHeaderField:@"x-brightbot-signature"];
     [request setValue:self.api_key forHTTPHeaderField:@"x-brightbot-api-key"];
     [request setValue:currentDate forHTTPHeaderField:@"x-brightbot-timestamp"];
+    [request setValue:self.teacher_id forHTTPHeaderField:@"x-brightbot-teacher"];
     [request setValue:@"1" forHTTPHeaderField:@"x-brightbot-version"];
     
     return request;
@@ -294,7 +295,7 @@ UIWebView *thisWebView;
                                      userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
     } else {
-        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        NSString* path = [NSString stringWithFormat:@"/students"];
         [self getJSON:path success:^(NSDictionary* json) {
             NSMutableArray* bbStudents = [[NSMutableArray alloc] init];
             for (NSDictionary* jsonStudent in [json objectForKey:@"data"]) {
@@ -335,7 +336,7 @@ UIWebView *thisWebView;
             }
         }
         
-        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        NSString* path = [NSString stringWithFormat:@"/students"];
         
         NSError *JSONerror;
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
@@ -358,7 +359,7 @@ UIWebView *thisWebView;
     
 }
 
-- (void)modifyStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
     
     if ( ![self authenticated] ) {
         // Set error if a pointer for the error was given
@@ -368,16 +369,21 @@ UIWebView *thisWebView;
                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
     } else {
-        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
         
-        [self sendData:path method:@"PUT" data:the_student success:^(NSData *data) {
+        NSError *JSONerror;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
+                                                           options:0
+                                                             error:&JSONerror];
+        
+        [self sendData:path method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]  success:^(NSData *data) {
             success();
         } error:error ];
     }
     
 }
 
-- (void)removeStudent:(NSString*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
 
     if ( ![self authenticated] ) {
         // Set error if a pointer for the error was given
@@ -388,11 +394,16 @@ UIWebView *thisWebView;
         }
     } else {
     
-        NSString* path = [NSString stringWithFormat:@"/students/%@", self.teacher_id];
+        NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
         
-        [self sendData:path method:@"DELETE" data:the_student success:^(NSData *data) {
-            success();
-        } error:error ];
+        NSError *JSONerror;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
+                                                           options:0
+                                                             error:&JSONerror];
+        
+        [self sendData:path method:@"DELETE" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
+                success();
+            } error:error ];
     }
     
 }
@@ -407,7 +418,7 @@ UIWebView *thisWebView;
                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
     } else {
-        NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
+        NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
         [self getJSON:path success:^(NSDictionary* json) {
             NSMutableArray* bbFileContents = [[NSMutableArray alloc] init];
             for (NSDictionary* jsonFileContent in [json objectForKey:@"data"]) {
@@ -433,7 +444,7 @@ UIWebView *thisWebView;
         // Transform the passed in content to our internal JSON format
         NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", self.app_id, content_data];
         
-        NSString* path = [NSString stringWithFormat:@"/content/%@/%@", self.teacher_id, student_id];
+        NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
         
         NSMutableDictionary *file_contents = [NSMutableDictionary
                                      dictionaryWithDictionary:@{
