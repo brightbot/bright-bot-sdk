@@ -59,6 +59,7 @@ UIWebView *thisWebView;
     }
 }
 
+// TODO, can I remove this?
 - (id)initAPI:(NSError **)error {
     if ((self = [super init])) {
         
