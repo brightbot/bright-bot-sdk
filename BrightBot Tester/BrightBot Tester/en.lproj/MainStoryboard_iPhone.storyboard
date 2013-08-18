@@ -130,19 +130,32 @@
                                     <action selector="addStudentContent:" destination="2" eventType="touchUpInside" id="Xsb-TX-eGg"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mff-d4-nfh">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="w/ Content">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="modifyStudentContent:" destination="2" eventType="touchUpInside" id="S3O-x8-hpX"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Lae-rx-YaM" firstAttribute="leading" secondItem="52Y-oi-D98" secondAttribute="leading" type="default" id="0B9-Wk-790"/>
+                            <constraint firstItem="Lae-rx-YaM" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="2OC-G1-PrU"/>
                             <constraint firstItem="xkj-8h-Keo" firstAttribute="centerX" secondItem="Bdt-lR-GLB" secondAttribute="centerX" type="default" id="5gG-Pi-6wR"/>
                             <constraint firstItem="52Y-oi-D98" firstAttribute="top" secondItem="xkj-8h-Keo" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="8Ad-gu-zNo"/>
+                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="trailing" secondItem="52Y-oi-D98" secondAttribute="trailing" type="default" id="9Kr-Hd-H99"/>
                             <constraint firstItem="cGh-Fl-gdf" firstAttribute="top" secondItem="3EK-z4-l2W" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="Aq2-6B-hHG"/>
-                            <constraint firstItem="Lae-rx-YaM" firstAttribute="trailing" secondItem="52Y-oi-D98" secondAttribute="trailing" type="default" id="CQp-EI-tfF"/>
                             <constraint firstItem="Bdt-lR-GLB" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" type="default" id="CyU-jo-acT"/>
                             <constraint firstItem="3EK-z4-l2W" firstAttribute="leading" secondItem="yc2-Fq-0Be" secondAttribute="leading" type="default" id="D4j-mm-idb"/>
-                            <constraint firstItem="Lae-rx-YaM" firstAttribute="leading" secondItem="yc2-Fq-0Be" secondAttribute="leading" type="default" id="Dw9-f3-qPE"/>
                             <constraint firstItem="Lae-rx-YaM" firstAttribute="top" secondItem="vyS-sL-q9N" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="JjE-1C-nrn"/>
-                            <constraint firstItem="xkj-8h-Keo" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="KMR-vx-Nva"/>
+                            <constraint firstItem="Bdt-lR-GLB" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="Juz-w6-Oof"/>
+                            <constraint firstItem="mff-d4-nfh" firstAttribute="baseline" secondItem="Lae-rx-YaM" secondAttribute="baseline" type="default" id="OD9-rR-5bT"/>
                             <constraint firstAttribute="trailing" secondItem="ZVF-Qn-nRA" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="QhU-Rc-Tcb"/>
                             <constraint firstItem="vyS-sL-q9N" firstAttribute="top" secondItem="3" secondAttribute="top" constant="166" id="Qzu-5S-dl4"/>
                             <constraint firstItem="cGh-Fl-gdf" firstAttribute="leading" secondItem="3EK-z4-l2W" secondAttribute="leading" type="default" id="SM3-z7-fWh"/>
@@ -150,10 +163,13 @@
                             <constraint firstItem="52Y-oi-D98" firstAttribute="leading" secondItem="xkj-8h-Keo" secondAttribute="leading" type="default" id="Vqj-Qj-ENI"/>
                             <constraint firstItem="ZVF-Qn-nRA" firstAttribute="baseline" secondItem="vyS-sL-q9N" secondAttribute="baseline" type="default" id="bBK-VQ-gQk"/>
                             <constraint firstItem="xkj-8h-Keo" firstAttribute="top" secondItem="3" secondAttribute="top" constant="63" id="cIf-Ni-NFh"/>
-                            <constraint firstItem="yc2-Fq-0Be" firstAttribute="trailing" secondItem="Lae-rx-YaM" secondAttribute="trailing" type="default" id="kDT-HL-GiK"/>
+                            <constraint firstAttribute="trailing" secondItem="mff-d4-nfh" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="lmT-6H-Ikb"/>
+                            <constraint firstItem="mff-d4-nfh" firstAttribute="leading" secondItem="Lae-rx-YaM" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="ne2-Hv-cg5"/>
                             <constraint firstItem="ZVF-Qn-nRA" firstAttribute="leading" secondItem="vyS-sL-q9N" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="q3W-T3-UJT"/>
+                            <constraint firstItem="52Y-oi-D98" firstAttribute="leading" secondItem="yc2-Fq-0Be" secondAttribute="leading" type="default" id="qhF-G1-mFB"/>
                             <constraint firstItem="3EK-z4-l2W" firstAttribute="top" secondItem="yc2-Fq-0Be" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="ri7-JQ-Z8v"/>
                             <constraint firstItem="xkj-8h-Keo" firstAttribute="trailing" secondItem="52Y-oi-D98" secondAttribute="trailing" type="default" id="tM0-Uy-lcr"/>
+                            <constraint firstItem="mff-d4-nfh" firstAttribute="leading" secondItem="ZVF-Qn-nRA" secondAttribute="leading" type="default" id="vAn-sj-chd"/>
                             <constraint firstItem="yc2-Fq-0Be" firstAttribute="top" secondItem="Lae-rx-YaM" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="vrG-D9-lxD"/>
                             <constraint firstItem="vyS-sL-q9N" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="zeG-ks-ibr"/>
                         </constraints>
@@ -167,6 +183,26 @@
             </objects>
         </scene>
     </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addContents:"/>
+                <relationship kind="action" name="addStudent:"/>
+                <relationship kind="action" name="addStudentContent:"/>
+                <relationship kind="action" name="getContents:"/>
+                <relationship kind="action" name="getStudents:"/>
+                <relationship kind="action" name="login:"/>
+                <relationship kind="action" name="modifyStudent:"/>
+                <relationship kind="action" name="modifyStudentContent:"/>
+                <relationship kind="action" name="removeStudent:"/>
+                <relationship kind="outlet" name="loginButton" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

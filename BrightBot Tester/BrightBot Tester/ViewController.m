@@ -211,4 +211,36 @@ NSArray *our_students;
     }
     
 }
+
+- (IBAction)modifyStudentContent:(id)sender {
+    
+    if (our_students == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    } else {
+        // We're good, we have students
+        BBStudent *first_student = [our_students objectAtIndex:0];
+        
+        NSString* filePath = [[NSBundle mainBundle] pathForResource:@"example_modify_profile_pic"
+                                                             ofType:@"png" inDirectory:@"data"];
+        NSData* the_profile_picture = [[NSFileManager defaultManager] contentsAtPath:filePath];
+        
+        NSDictionary *studentData = @{
+                                      @"id" : first_student.guid,
+                                      @"name" : @"NewName",
+                                      @"profile_picture" : the_profile_picture
+                                      };
+        
+        [[BrightBot sharedInstance] modifyStudent:studentData
+                                          success:^(void) {
+                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                              [alert show];
+                                              [alert release];
+                                          }
+                                            error:^(NSError* error) {
+                                                NSLog(@"error removing student %@", error);
+                                            }];
+    }
+}
 @end

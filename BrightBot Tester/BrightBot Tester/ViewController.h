@@ -24,5 +24,6 @@
 - (IBAction)addContents:(id)sender;
 - (IBAction)removeStudent:(id)sender;
 - (IBAction)modifyStudent:(id)sender;
+- (IBAction)modifyStudentContent:(id)sender;
 
 @end

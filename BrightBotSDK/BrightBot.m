@@ -148,14 +148,14 @@ UIWebView *thisWebView;
 }
 
 
--(void)postFile:(NSString*)path data:(NSString*)data file_contents:(NSMutableDictionary*)file_contents success:(void(^)(NSData* thisData))success
+-(void)sendFile:(NSString*)path method:(NSString*)method data:(NSString*)data file_contents:(NSMutableDictionary*)file_contents success:(void(^)(NSData* thisData))success
           error:(void(^)(NSError* error))error {
     
     NSMutableURLRequest* request = [self setupRequest:path];
     
     NSString *boundary = @"0Xvdfegrdf876fRD";
     
-    [request setHTTPMethod:@"POST"];
+    [request setHTTPMethod:method];
     
     // Build the multi-part form submission to the API
     NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
@@ -323,7 +323,7 @@ UIWebView *thisWebView;
         if ([student_files count] > 0) {
             // We have data files
             
-            [self postFile:path data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+            [self sendFile:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
                 file_contents:student_files success:^(NSData *json) {
                 success(json);
             } error:error ];
@@ -346,16 +346,43 @@ UIWebView *thisWebView;
                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
         }
     } else {
+        
+        // Check to see if the_student has NSData (files) in the dictionary
+        NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
+        NSMutableDictionary *student_files = [NSMutableDictionary
+                                              dictionaryWithDictionary:@{}];
+        
+        for(id key in the_student) {
+            id this_value = [the_student objectForKey:key];
+            
+            if ([this_value isKindOfClass:[NSData class]]) {
+                
+                // Remove this object from the student textual data and move to a new object
+                [student_dictionary removeObjectForKey:key];
+                [student_files setObject:this_value forKey:key];
+                
+            }
+        }
+        
         NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
         
         NSError *JSONerror;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
                                                            options:0
                                                              error:&JSONerror];
         
-        [self sendData:path method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]  success:^(NSData *data) {
-            success();
-        } error:error ];
+        if ([student_files count] > 0) {
+            // We have data files
+            
+            [self sendFile:path method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+             file_contents:student_files success:^(NSData *json) {
+                 success();
+             } error:error ];
+        } else {
+            [self sendData:path method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]  success:^(NSData *data) {
+                success();
+            } error:error ];
+        }
     }
     
 }
@@ -427,7 +454,7 @@ UIWebView *thisWebView;
                                      dictionaryWithDictionary:@{
                                      @"content" : the_file,
                                      }];
-        [self postFile:path data:transformedContent file_contents:file_contents success:^(NSData *json) {
+        [self sendFile:path method:@"POST" data:transformedContent file_contents:file_contents success:^(NSData *json) {
             success();
         } error:error ];
     }
