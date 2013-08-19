@@ -124,9 +124,11 @@ UIWebView *thisWebView;
     [request setHTTPMethod:method];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
     
-    NSString *postString = [NSString stringWithFormat:@"data=%@",data];
-    [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-    
+    if ( data != nil ) {
+        NSString *postString = [NSString stringWithFormat:@"data=%@",data];
+        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+        
     [NSURLConnection sendAsynchronousRequest:request
            queue:[NSOperationQueue mainQueue]
     completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
@@ -405,7 +407,7 @@ UIWebView *thisWebView;
                                                            options:0
                                                              error:&JSONerror];
         
-        [self sendData:path method:@"DELETE" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
+        [self sendData:path method:@"DELETE" data:nil success:^(NSData *data) {
                 success();
             } error:error ];
     }
