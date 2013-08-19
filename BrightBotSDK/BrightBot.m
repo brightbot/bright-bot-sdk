@@ -402,11 +402,6 @@ UIWebView *thisWebView;
     
         NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
         
-        NSError *JSONerror;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:the_student
-                                                           options:0
-                                                             error:&JSONerror];
-        
         [self sendData:path method:@"DELETE" data:nil success:^(NSData *data) {
                 success();
             } error:error ];
