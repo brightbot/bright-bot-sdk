@@ -186,7 +186,7 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 
 - (NSMutableURLRequest*)setupRequest:(NSString*)path {
     
-    NSString* urlString          = [[NSString alloc] initWithFormat:@"%@%@", kBrightBotAPIBase, path];
+    NSString* urlString          = [[NSString alloc] initWithFormat:@"%@/%@%@", kBrightBotAPIBase, kBrightBotAPIVersion, path];
     NSURL* url                   = [NSURL URLWithString:urlString];
     NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:url];
     
