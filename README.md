@@ -16,12 +16,12 @@ There are two options for including the SDK in your project:
 $ git submodule add git@github.com:brightbot/bright-bot-sdk.git bright-bot-sdk
 ```
 * Add the related source files and controllers to you Xcode project by dragging them into your project:
-+ GTMOAuth2Authentication.h/m
-+ GTMOAuth2SignIn.h/m
-+ GTMHTTPFetcher.h/m
-+ GTMOAuth2ViewControllerTouch.h/m
-+ GTMOAuth2ViewTouch.xib
-+ BrightBot.h/.m
+	+ GTMOAuth2Authentication.h/m
+	+ GTMOAuth2SignIn.h/m
+	+ GTMHTTPFetcher.h/m
+	+ GTMOAuth2ViewControllerTouch.h/m
+	+ GTMOAuth2ViewTouch.xib
+	+ BrightBot.h/.m
 
 ![Xcode source files](http://cl.ly/image/243S0U0E2G3e/Screen%20Shot%202013-08-21%20at%2012.41.16%20PM.png "Source Files")
 
