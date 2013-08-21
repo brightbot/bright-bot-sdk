@@ -42,12 +42,13 @@ You can instantiate it by including `BrightBot.h` and calling the `configure` me
 
 ...
 
-BrightBot* api = [[BrightBot sharedInstance] configure:@"d3a9730bebe8b0595466fed04de5fb559fc93fa8" client_secret:@"1f0b998fe5fcb48b5adeb359e773cdda3237ba0f"];
+BrightBot* api = [[BrightBot sharedInstance] configure:@"<Your Client ID>" 
+	client_secret:@"<Your Client Secret>"];
 ```
 
 ## Authenticating
 
-You can figure out of the current user is authenticated through the 'authenticated' method:
+You can figure out of the current user is authenticated through the `authenticated` method:
 
 ```objective-c
 
@@ -59,7 +60,7 @@ if ( ! [[BrightBot sharedInstance] authenticated] ) {
 
 ```
 
-If the user need to authenticate with the BrightBot system, you can call the 'authenticate' method:
+If the user need to authenticate with the BrightBot system, you can call the `authenticate` method:
 
 ```objective-c
 
@@ -72,7 +73,7 @@ If the user need to authenticate with the BrightBot system, you can call the 'au
 
 ```
 
-If you want to programatically log the user out of the system, use the 'signOut' method:
+If you want to programatically log the user out of the system, use the `signOut` method:
 
 ```objective-c
 
@@ -82,7 +83,7 @@ If you want to programatically log the user out of the system, use the 'signOut'
 
 ## Getting data
 
-Once you have an authenticated instance of the `BrightBot` class you can query the API and send data to the API. One simple example is the 'getStudents' methods that returns the current user's list of students. The 'getStudents' method returns an `NSArray` of `BBStudent` objects on success:
+Once you have an authenticated instance of the `BrightBot` class you can query the API and send data to the API. One simple example is the 'getStudents' methods that returns the current user's list of students. The `getStudents` method returns an `NSArray` of `BBStudent` objects on success:
 
 ```objective-c
 
