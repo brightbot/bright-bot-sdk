@@ -11,40 +11,78 @@
 #import <Foundation/NSURLResponse.h>
 #import <Foundation/NSURLConnection.h>
 #import <Foundation/NSJSONSerialization.h>
-#import <CommonCrypto/CommonHMAC.h>
-#import "NSDataBase64.h"
+#import "GTMOAuth2Authentication.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+
 
 @implementation BrightBot 
 
 // Instance vars
 void (^authFinish)();
-UIViewController *authController;
-UIWebView *thisWebView;
+GTMOAuth2ViewControllerTouch *viewController;
+
+@synthesize auth = mAuth;
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
-- (id)init
-{
-    self = [super init];
-    if(self) {
+static NSString *const kKeychainItemName = @"BrightBot OAuth";
+NSString *kBBClientID = @"e5b57ef0b9bc69fb376f1a8f294971f61ee1b956";     // pre-assigned by service
+NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-assigned by service
 
-        NSUserDefaults *standardUserDefaults = [NSUserDefaults standardUserDefaults];
-        NSString *private_key = [standardUserDefaults stringForKey:@"bb.private_key"];
-        NSString *teacher_id = [standardUserDefaults stringForKey:@"bb.teacher_id"];
-        NSString *api_key = [standardUserDefaults stringForKey:@"bb.api_key"];
+- (GTMOAuth2Authentication *)brightbotAuth {
+    
+    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/oauth/token", kBrightBotAPIBase];
+    NSURL *tokenURL = [NSURL URLWithString:urlString];
+    
+    // We'll make up an arbitrary redirectURI.  The controller will watch for
+    // the server to redirect the web view to this URI, but this URI will not be
+    // loaded, so it need not be for any actual web page.
+    NSString *redirectURI = @"http://www.google.com/OAuthCallback";
+    
+    GTMOAuth2Authentication *auth;
+    auth = [GTMOAuth2Authentication authenticationWithServiceProvider:@"BrightBot Service"
+                                                             tokenURL:tokenURL
+                                                          redirectURI:redirectURI
+                                                             clientID:kBBClientID
+                                                         clientSecret:kBBClientSecret];
+    return auth;
+}
 
-        self.api_key = api_key;
-        self.private_key = private_key;
-        self.teacher_id = teacher_id;
-        self.app_id = [[NSBundle mainBundle] bundleIdentifier]; // Grab the bundle of the current app
-
-        if (private_key && teacher_id && api_key) {
-            [self setAuthenticated:YES];
-        } else {
-            [self setAuthenticated:NO];
-        }
+- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
+      finishedWithAuth:(GTMOAuth2Authentication *)auth
+                 error:(NSError *)error {
+    if (error != nil) {
+        NSLog(@"Got error");
+        // Sign-in failed
+    } else {
+        // Sign-in succeeded
+        self.auth = auth;
+        
+        authFinish();
+        
+        [viewController dismissViewControllerAnimated:NO completion:nil];
     }
+}
 
+- (id)init {
+    // Get the saved authentication, if any, from the keychain.
+    GTMOAuth2Authentication *auth = nil;
+    auth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName
+                clientID:kBBClientID
+                clientSecret:kBBClientSecret];
+    if (auth) {
+        BOOL didAuth = [GTMOAuth2ViewControllerTouch
+                        authorizeFromKeychainForName:@"BrightBot Service"
+                        authentication:auth
+                        error:NULL];
+    }
+    
+    // Retain the authentication object, which holds the auth tokens
+    //
+    // We can determine later if the auth object contains an access token
+    // by calling its -canAuthorize method
+    self.auth = auth;
+    
     return self;
 }
 
@@ -62,6 +100,10 @@ UIWebView *thisWebView;
     }
 }
 
+- (BOOL)authenticated {
+    return [self.auth canAuthorize];
+}
+
 // JSON fetch boilerplate
 - (void)getJSON:(NSString*)path success:(void (^)(NSDictionary* json))success
                                   error:(void (^)(NSError* error))error {
@@ -71,48 +113,11 @@ UIWebView *thisWebView;
     } error:error ];
 }
 
-- (NSString *)generateHashedString:(NSString*)key data:(NSString*)data {
-
-    const char *cKey  = [key cStringUsingEncoding:NSASCIIStringEncoding];
-    const char *cData = [data cStringUsingEncoding:NSASCIIStringEncoding];
-    
-    unsigned char cHMAC[CC_SHA256_DIGEST_LENGTH];
-    
-    CCHmac(kCCHmacAlgSHA256, cKey, strlen(cKey), cData, strlen(cData), cHMAC);
-    
-    NSData *HMAC = [[NSData alloc] initWithBytes:cHMAC
-                                          length:sizeof(cHMAC)];
-    
-    return [HMAC base64Encoding];
-}
-
 - (NSMutableURLRequest*)setupRequest:(NSString*)path {
     NSString* urlString          = [[NSString alloc] initWithFormat:@"%@%@", kBrightBotAPIBase, path];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeZone *timeZone = [NSTimeZone timeZoneWithName:@"UTC"];
-    [dateFormatter setTimeZone:timeZone];
-    [dateFormatter setDateFormat:@"yyyy-MMMM-d'T'HH:mm:ssZZZZZ"];
-    NSString *currentDate = [dateFormatter stringFromDate:[NSDate date]];
-    
-    NSString* encryptData        = [NSString stringWithFormat:@"%@%@%@", self.api_key, path, currentDate];
-    
-    // Build signature to pass onto server
-    NSString *signature          = [self generateHashedString:self.private_key data:encryptData];
-    
-    NSLog(@"Signature %@", signature);
-    NSLog(@"API Key %@", self.api_key);
-    
-    
     NSURL* url                   = [NSURL URLWithString:urlString];
     NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:url];
-    
-    // Setup the request properly
-    [request setValue:signature forHTTPHeaderField:@"x-brightbot-signature"];
-    [request setValue:self.api_key forHTTPHeaderField:@"x-brightbot-api-key"];
-    [request setValue:currentDate forHTTPHeaderField:@"x-brightbot-timestamp"];
-    [request setValue:self.teacher_id forHTTPHeaderField:@"x-brightbot-teacher"];
-    [request setValue:@"1" forHTTPHeaderField:@"x-brightbot-version"];
     
     return request;
 }
@@ -205,25 +210,33 @@ UIWebView *thisWebView;
 
 // URL fetch boilerplate
 - (void)getData:(NSString*)path success:(void (^)(NSData* thisData))success
-                                                                 error:(void (^)(NSError* error))error {
+          error:(void (^)(NSError* error))reqError {
     NSMutableURLRequest* request = [self setupRequest:path];
     
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-       if (!response && requestError) {
-           if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
-               requestError.code == NSURLErrorUserCancelledAuthentication) {
-               error([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
-                      [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-           } else { // TODO handle 1) api offline, 2) error response in json
-               NSLog(@"%@", requestError);
-               error(requestError);
-           }
-           return;
-       }
-       success(body);
-   }];
+    [self.auth authorizeRequest:request
+         completionHandler:^(NSError *error) {
+             if (error == nil) {
+                 // the request has been authorized
+                 
+                [NSURLConnection sendAsynchronousRequest:request
+                    queue:[NSOperationQueue mainQueue]
+                    completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+                    if (!response && requestError) {
+                        if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
+                            requestError.code == NSURLErrorUserCancelledAuthentication) {
+                            reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
+                                   [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
+                        } else { // TODO handle 1) api offline, 2) error response in json
+                            NSLog(@"%@", requestError);
+                            reqError(requestError);
+                        }
+                        return;
+                    }
+                    success(body);
+                    }];
+             }
+         }];
+
 }
 
 // Photo fetch boilerplate
@@ -443,7 +456,7 @@ UIWebView *thisWebView;
         }
     } else {
         // Transform the passed in content to our internal JSON format
-        NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", self.app_id, content_data];
+        NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", [[NSBundle mainBundle] bundleIdentifier], content_data];
         
         NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
         
@@ -460,115 +473,32 @@ UIWebView *thisWebView;
 
 -(void)signOut {
     
-    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_logout", kBrightBotAPIBase];
-    NSURL *nsUrl=[NSURL URLWithString:urlString];
-    
-    // Hidden webview to handle redirect
-    thisWebView = [[UIWebView alloc] initWithFrame:CGRectZero];
-    [thisWebView setDelegate:self];
-    [thisWebView loadRequest:[NSURLRequest requestWithURL:nsUrl]];
-    
-    // Remove from the NSUserDefaults objects
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.private_key"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.teacher_id"];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"bb.api_key"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // Clear out the local instance vars
-    self.api_key = nil;
-    self.private_key = nil;
-    self.teacher_id = nil;
-    
-    [self setAuthenticated:NO];
+    [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
+    self.auth = nil;    
 }
 
 - (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error {
-    // Save off the API key
-    self.api_key = api_key;
+    [self signOut];
     
-    // Apple specifies that a root view controller should exist for every app, so we rely on it here.
+    GTMOAuth2Authentication *auth = [self brightbotAuth];
+    
+    // Specify the appropriate scope string, if any, according to the service's API documentation
+    auth.scope = @"read";
+    
+    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/oauth/authorize", kBrightBotAPIBase];
+    NSURL *authURL = [NSURL URLWithString:urlString];
+    
+    // Display the authentication view
+    viewController = [[[GTMOAuth2ViewControllerTouch alloc] initWithAuthentication:auth
+        authorizationURL:authURL
+        keychainItemName:kKeychainItemName
+        delegate:self
+        finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
+    
     UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
-    authController = [[UIViewController alloc] init];
-    authController.modalPresentationStyle = UIModalPresentationFormSheet;
-    authController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-    [rootVC presentViewController:authController animated:YES completion:nil];
-    
-    CGRect webFrame = CGRectMake(0, 0, 0, 0);
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        // iPhone Code
-        webFrame = CGRectMake(0, 0,  320, 460);
-        authController.view.superview.frame = CGRectMake(0,0, 320, 460); //it's important to do this after presentModalViewController
-        authController.view.superview.center = (UIInterfaceOrientationIsPortrait(rootVC.interfaceOrientation) ?
-                                                CGPointMake(160, 220) : CGPointMake(220, 160));
-    } else {
-        // iPad Code
-        webFrame = CGRectMake(0, 0, 480, 320);
-        authController.view.superview.frame = CGRectMake(0,0, 540, 540); //it's important to do this after presentModalViewController
-        authController.view.superview.center = (UIInterfaceOrientationIsPortrait(rootVC.interfaceOrientation) ?
-                                                CGPointMake(384, 512) : CGPointMake(512, 384));
-    }
-    
-    thisWebView = [[UIWebView alloc] initWithFrame:webFrame];
-    
-    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/api_login", kBrightBotAPIBase];
-    
-    NSURL *nsUrl=[NSURL URLWithString:urlString];
-    NSURLRequest *nsrequest=[NSURLRequest requestWithURL:nsUrl];
-    [thisWebView setDelegate:self];
-    [thisWebView loadRequest:nsrequest];
-    
-    thisWebView.center = authController.view.center;
-    
-    [authController.view addSubview:thisWebView];
-    
-    // Save the handler to call later
-    authFinish = [success copy];
-    
-}
+    [rootVC presentViewController:viewController animated:YES completion:nil];
 
-// Used to intercept the navigation requests of this implemention of UIWebViewDelegant interface
-// Really used to watch for the bb-auth URL call so that we can save data and close auth webview
-- (BOOL)webView:(UIWebView *)ourWebView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
-    NSURL *url = request.URL;
-    NSLog(@"URL Nav %@", url);
-    
-    if ([[url scheme] isEqualToString:@"bb-auth"]) {
-        
-        NSString *q = [url query];
-        NSArray *pairs = [q componentsSeparatedByString:@"&"];
-        NSMutableDictionary *kvPairs = [NSMutableDictionary dictionary];
-        for (NSString *pair in pairs) {
-            NSArray *bits = [pair componentsSeparatedByString:@"="];
-            NSString *key = [[bits objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            NSString *value = [[bits objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            [kvPairs setObject:value forKey:key];
-        }
-        
-        // Setup the variables we got from the auth function
-        self.private_key = [kvPairs objectForKey:@"access_token"];
-        self.teacher_id = [kvPairs objectForKey:@"teacher_id"];
-        
-        // Save these in NSUserDefaults, TODO this is not secure but works well enough for now
-        NSUserDefaults * standardUserDefaults = [NSUserDefaults standardUserDefaults];
-        [standardUserDefaults setObject:self.private_key forKey:@"bb.private_key"];
-        [standardUserDefaults setObject:self.teacher_id forKey:@"bb.teacher_id"];
-        [standardUserDefaults setObject:self.api_key forKey:@"bb.api_key"];
-        [standardUserDefaults synchronize];
-        
-        [self setAuthenticated:YES];
-        
-        authFinish();
-        
-        // Close up shop, auth done
-        [authController dismissViewControllerAnimated:NO completion:nil];
-        authController = nil;
-        [thisWebView setDelegate:nil];
-        thisWebView = nil;
-        
-        return YES;
-    }
-    return YES;
+    authFinish = [success copy];
 }
 
 /*

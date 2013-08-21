@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A03901217C5025000A5B115 /* GTMOAuth2Authentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03900F17C5025000A5B115 /* GTMOAuth2Authentication.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		9A03901317C5025000A5B115 /* GTMOAuth2SignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901117C5025000A5B115 /* GTMOAuth2SignIn.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		9A03901617C5026700A5B115 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901517C5026700A5B115 /* GTMHTTPFetcher.m */; };
+		9A03901A17C5028700A5B115 /* GTMOAuth2ViewControllerTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901817C5028700A5B115 /* GTMOAuth2ViewControllerTouch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		9A03901B17C5028700A5B115 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A03901917C5028700A5B115 /* GTMOAuth2ViewTouch.xib */; };
+		9A03901D17C5029A00A5B115 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A03901C17C5029A00A5B115 /* Security.framework */; };
+		9A03901F17C5029F00A5B115 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A03901E17C5029F00A5B115 /* SystemConfiguration.framework */; };
+		9A03902017C506D200A5B115 /* GTMHTTPFetcher.h in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901417C5026700A5B115 /* GTMHTTPFetcher.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		9A03902117C506D200A5B115 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901517C5026700A5B115 /* GTMHTTPFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9A1C8D0D17A1B08F00B62D15 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 9A1C8D0C17A1B08F00B62D15 /* data */; };
 		9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FB1796E53B0036B677 /* UIKit.framework */; };
 		9AA5D0FE1796E53B0036B677 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FD1796E53B0036B677 /* Foundation.framework */; };
@@ -27,8 +36,6 @@
 		9AA5D1301796E53C0036B677 /* BrightBot_TesterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */; };
 		9AD7E08017B8415A0045DEC8 /* BrightBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07D17B8415A0045DEC8 /* BrightBot.m */; };
 		9AD7E08117B8415A0045DEC8 /* BrightBot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07D17B8415A0045DEC8 /* BrightBot.m */; };
-		9AD7E08217B8415A0045DEC8 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */; };
-		9AD7E08317B8415A0045DEC8 /* NSDataBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +49,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A03900E17C5025000A5B115 /* GTMOAuth2Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMOAuth2Authentication.h; path = "../../BrightBotSDK/gtm-oauth2/Source/GTMOAuth2Authentication.h"; sourceTree = "<group>"; };
+		9A03900F17C5025000A5B115 /* GTMOAuth2Authentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMOAuth2Authentication.m; path = "../../BrightBotSDK/gtm-oauth2/Source/GTMOAuth2Authentication.m"; sourceTree = "<group>"; };
+		9A03901017C5025000A5B115 /* GTMOAuth2SignIn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMOAuth2SignIn.h; path = "../../BrightBotSDK/gtm-oauth2/Source/GTMOAuth2SignIn.h"; sourceTree = "<group>"; };
+		9A03901117C5025000A5B115 /* GTMOAuth2SignIn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMOAuth2SignIn.m; path = "../../BrightBotSDK/gtm-oauth2/Source/GTMOAuth2SignIn.m"; sourceTree = "<group>"; };
+		9A03901417C5026700A5B115 /* GTMHTTPFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMHTTPFetcher.h; path = "../../BrightBotSDK/gtm-oauth2/HTTPFetcher/GTMHTTPFetcher.h"; sourceTree = "<group>"; };
+		9A03901517C5026700A5B115 /* GTMHTTPFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMHTTPFetcher.m; path = "../../BrightBotSDK/gtm-oauth2/HTTPFetcher/GTMHTTPFetcher.m"; sourceTree = "<group>"; };
+		9A03901717C5028700A5B115 /* GTMOAuth2ViewControllerTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMOAuth2ViewControllerTouch.h; path = "../../BrightBotSDK/gtm-oauth2/Source/Touch/GTMOAuth2ViewControllerTouch.h"; sourceTree = "<group>"; };
+		9A03901817C5028700A5B115 /* GTMOAuth2ViewControllerTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GTMOAuth2ViewControllerTouch.m; path = "../../BrightBotSDK/gtm-oauth2/Source/Touch/GTMOAuth2ViewControllerTouch.m"; sourceTree = "<group>"; };
+		9A03901917C5028700A5B115 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = "../../BrightBotSDK/gtm-oauth2/Source/Touch/GTMOAuth2ViewTouch.xib"; sourceTree = "<group>"; };
+		9A03901C17C5029A00A5B115 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		9A03901E17C5029F00A5B115 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9A1C8D0C17A1B08F00B62D15 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
 		9AA5D0F81796E53B0036B677 /* BrightBot Tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BrightBot Tester.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AA5D0FB1796E53B0036B677 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -68,8 +86,6 @@
 		9AA5D12F1796E53C0036B677 /* BrightBot_TesterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightBot_TesterTests.m; sourceTree = "<group>"; };
 		9AD7E07C17B8415A0045DEC8 /* BrightBot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrightBot.h; path = ../../BrightBotSDK/BrightBot.h; sourceTree = "<group>"; };
 		9AD7E07D17B8415A0045DEC8 /* BrightBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrightBot.m; path = ../../BrightBotSDK/BrightBot.m; sourceTree = "<group>"; };
-		9AD7E07E17B8415A0045DEC8 /* NSDataBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataBase64.h; path = ../../BrightBotSDK/NSDataBase64.h; sourceTree = "<group>"; };
-		9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataBase64.m; path = ../../BrightBotSDK/NSDataBase64.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +93,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A03901F17C5029F00A5B115 /* SystemConfiguration.framework in Frameworks */,
+				9A03901D17C5029A00A5B115 /* Security.framework in Frameworks */,
 				9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */,
 				9AA5D0FE1796E53B0036B677 /* Foundation.framework in Frameworks */,
 				9AA5D1001796E53B0036B677 /* CoreGraphics.framework in Frameworks */,
@@ -99,6 +117,8 @@
 		9AA5D0EF1796E53B0036B677 = {
 			isa = PBXGroup;
 			children = (
+				9A03901E17C5029F00A5B115 /* SystemConfiguration.framework */,
+				9A03901C17C5029A00A5B115 /* Security.framework */,
 				9AA5D1011796E53B0036B677 /* BrightBot Tester */,
 				9AA5D1281796E53C0036B677 /* BrightBot TesterTests */,
 				9AA5D0FA1796E53B0036B677 /* Frameworks */,
@@ -129,10 +149,17 @@
 		9AA5D1011796E53B0036B677 /* BrightBot Tester */ = {
 			isa = PBXGroup;
 			children = (
+				9A03901717C5028700A5B115 /* GTMOAuth2ViewControllerTouch.h */,
+				9A03901817C5028700A5B115 /* GTMOAuth2ViewControllerTouch.m */,
+				9A03901917C5028700A5B115 /* GTMOAuth2ViewTouch.xib */,
+				9A03901417C5026700A5B115 /* GTMHTTPFetcher.h */,
+				9A03901517C5026700A5B115 /* GTMHTTPFetcher.m */,
+				9A03900E17C5025000A5B115 /* GTMOAuth2Authentication.h */,
+				9A03900F17C5025000A5B115 /* GTMOAuth2Authentication.m */,
+				9A03901017C5025000A5B115 /* GTMOAuth2SignIn.h */,
+				9A03901117C5025000A5B115 /* GTMOAuth2SignIn.m */,
 				9AD7E07C17B8415A0045DEC8 /* BrightBot.h */,
 				9AD7E07D17B8415A0045DEC8 /* BrightBot.m */,
-				9AD7E07E17B8415A0045DEC8 /* NSDataBase64.h */,
-				9AD7E07F17B8415A0045DEC8 /* NSDataBase64.m */,
 				9AA5D10A1796E53B0036B677 /* AppDelegate.h */,
 				9AA5D10B1796E53B0036B677 /* AppDelegate.m */,
 				9AA5D1131796E53B0036B677 /* MainStoryboard_iPhone.storyboard */,
@@ -256,6 +283,7 @@
 				9AA5D1151796E53B0036B677 /* MainStoryboard_iPhone.storyboard in Resources */,
 				9AA5D1181796E53B0036B677 /* MainStoryboard_iPad.storyboard in Resources */,
 				9A1C8D0D17A1B08F00B62D15 /* data in Resources */,
+				9A03901B17C5028700A5B115 /* GTMOAuth2ViewTouch.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,11 +318,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A03902017C506D200A5B115 /* GTMHTTPFetcher.h in Sources */,
+				9A03902117C506D200A5B115 /* GTMHTTPFetcher.m in Sources */,
 				9AA5D1081796E53B0036B677 /* main.m in Sources */,
 				9AA5D10C1796E53B0036B677 /* AppDelegate.m in Sources */,
 				9AA5D11B1796E53B0036B677 /* ViewController.m in Sources */,
 				9AD7E08017B8415A0045DEC8 /* BrightBot.m in Sources */,
-				9AD7E08217B8415A0045DEC8 /* NSDataBase64.m in Sources */,
+				9A03901217C5025000A5B115 /* GTMOAuth2Authentication.m in Sources */,
+				9A03901317C5025000A5B115 /* GTMOAuth2SignIn.m in Sources */,
+				9A03901A17C5028700A5B115 /* GTMOAuth2ViewControllerTouch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,7 +336,7 @@
 			files = (
 				9AA5D1301796E53C0036B677 /* BrightBot_TesterTests.m in Sources */,
 				9AD7E08117B8415A0045DEC8 /* BrightBot.m in Sources */,
-				9AD7E08317B8415A0045DEC8 /* NSDataBase64.m in Sources */,
+				9A03901617C5026700A5B115 /* GTMHTTPFetcher.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -413,9 +445,10 @@
 		9AA5D1341796E53C0036B677 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BrightBot Tester/BrightBot Tester-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "BrightBot Tester/BrightBot Tester-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";
@@ -426,9 +459,10 @@
 		9AA5D1351796E53C0036B677 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BrightBot Tester/BrightBot Tester-Prefix.pch";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "BrightBot Tester/BrightBot Tester-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "";

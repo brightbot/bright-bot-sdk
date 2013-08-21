@@ -5,6 +5,8 @@
 //  Copyright (c) 2013 BrightBot Inc. All rights reserved.
 //
 
+#import "GTMOAuth2Authentication.h"
+
 //#define kBrightBotAPIBase @"http://api.localhost:10080" //:10080"
 #define kBrightBotAPIBase @"http://api.brightbot.co"
 
@@ -58,17 +60,16 @@
 - (NSString*)url;
 @end
 
-@interface BrightBot : UIView <UIWebViewDelegate>
+@interface BrightBot : NSObject {
+    GTMOAuth2Authentication *mAuth;
+}
 
-@property (nonatomic, copy) NSString *api_key;
-@property (nonatomic, copy) NSString *private_key;
-@property (nonatomic, copy) NSString *teacher_id;
-@property (nonatomic, copy) NSString *app_id;
-@property (nonatomic, assign) BOOL authenticated;
+@property (nonatomic, retain) GTMOAuth2Authentication *auth;
+
 
 + (BrightBot *)sharedInstance;
 
-- (id)initAPI:(NSError **)error;
+- (BOOL)authenticated;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
 - (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
