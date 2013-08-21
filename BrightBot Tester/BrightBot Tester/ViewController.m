@@ -151,7 +151,7 @@ NSArray *our_students;
 
         
         [[BrightBot sharedInstance] addFileContents:first_student.guid data:the_content file:the_file
-            success:^(void) {
+            success:^(id data) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Content was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
                 [alert release];

@@ -19,7 +19,7 @@
 
 // Instance vars
 void (^authFinish)();
-GTMOAuth2ViewControllerTouch *viewController;
+GTMOAuth2ViewControllerTouch *authController;
 
 @synthesize auth = mAuth;
 @synthesize BBClientID = mBBClientID;
@@ -28,20 +28,26 @@ GTMOAuth2ViewControllerTouch *viewController;
 // TODO need to make sure that the API is initialized before allowing any calls
 
 static NSString *const kKeychainItemName = @"BrightBot OAuth";
+static NSString *const kServiceProviderName = @"BrightBot Service";
 
+/*
+ Authentication and Instantiation Methods
+ */
 
+// The BrightBoth authentication object setup
 - (GTMOAuth2Authentication *)brightbotAuth {
     
     NSString* urlString = [[NSString alloc] initWithFormat:@"%@/oauth/token", kBrightBotAPIBase];
     NSURL *tokenURL = [NSURL URLWithString:urlString];
     
+    
     // We'll make up an arbitrary redirectURI.  The controller will watch for
     // the server to redirect the web view to this URI, but this URI will not be
     // loaded, so it need not be for any actual web page.
-    NSString *redirectURI = @"http://www.google.com/OAuthCallback";
+    NSString *redirectURI = @"http://www.brightbot.com/OAuthCallback";
     
     GTMOAuth2Authentication *auth;
-    auth = [GTMOAuth2Authentication authenticationWithServiceProvider:@"BrightBot Service"
+    auth = [GTMOAuth2Authentication authenticationWithServiceProvider:kServiceProviderName
                                                              tokenURL:tokenURL
                                                           redirectURI:redirectURI
                                                              clientID:self.BBClientID
@@ -49,20 +55,62 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
     return auth;
 }
 
+// The auth finish selector
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
       finishedWithAuth:(GTMOAuth2Authentication *)auth
                  error:(NSError *)error {
+    
     if (error != nil) {
-        NSLog(@"Got error");
-        // Sign-in failed
+        // Authentication failed (perhaps the user denied access, or closed the
+        // window before granting access)
+        NSLog(@"Authentication error: %@", error);
+        NSData *responseData = [[error userInfo] objectForKey:@"data"]; // kGTMHTTPFetcherStatusDataKey
+        if ([responseData length] > 0) {
+            // show the body of the server's authentication failure response
+            NSString *str = [[[NSString alloc] initWithData:responseData
+                                                   encoding:NSUTF8StringEncoding] autorelease];
+            NSLog(@"%@", str);
+        }
+        
+        self.auth = nil;
+        
+        // Close the auth controller even if failed.
+        [authController dismissViewControllerAnimated:NO completion:nil];
     } else {
         // Sign-in succeeded
+        
+        // Save the authentication object for use elsewhere.
         self.auth = auth;
         
+        // Call the method 
         authFinish();
         
-        [viewController dismissViewControllerAnimated:NO completion:nil];
+        // Close the auth controller
+        [authController dismissViewControllerAnimated:NO completion:nil];
     }
+}
+
+- (void)configure:(NSString *)client_id client_secret:(NSString *)client_secret {
+    self.BBClientID = client_id;
+    self.BBClientSecret = client_secret;
+    
+    // Get the saved authentication, if any, from the keychain.
+    GTMOAuth2Authentication *auth = nil;
+    
+    auth = [self brightbotAuth];
+    if (auth) {
+        
+        // Load from Keychain
+        [GTMOAuth2ViewControllerTouch authorizeFromKeychainForName:kKeychainItemName
+                                                    authentication:auth
+                                                             error:NULL];
+    }
+    
+    // Retain the authentication object, which holds the auth tokens
+    //
+    // We can determine later if the auth object contains an access token
+    // by calling its -canAuthorize method
+    self.auth = auth;
 }
 
 - (id)init {
@@ -84,51 +132,71 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
     }
 }
 
-- (void)configure:(NSString *)client_id client_secret:(NSString *)client_secret {
-    self.BBClientID = client_id;
-    self.BBClientSecret = client_secret;
+-(void)signOut {
     
-    // Get the saved authentication, if any, from the keychain.
-    GTMOAuth2Authentication *auth = nil;
+    [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
+    self.auth = nil;
     
-    auth = [self brightbotAuth];
-    if (auth) {
-        
-        BOOL didAuth = [GTMOAuth2ViewControllerTouch authorizeFromKeychainForName:kKeychainItemName
-                                                                   authentication:auth
-                                                                            error:NULL];
-    }
-    
-    // Retain the authentication object, which holds the auth tokens
-    //
-    // We can determine later if the auth object contains an access token
-    // by calling its -canAuthorize method
-    self.auth = auth;
 }
+
+- (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error {
+    [self signOut];
+    
+    GTMOAuth2Authentication *auth = [self brightbotAuth];
+    
+    // Specify the appropriate scope string, if any, according to the service's API documentation
+    auth.scope = @"full_access";
+    
+    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/oauth/authorize", kBrightBotAPIBase];
+    NSURL *authURL = [NSURL URLWithString:urlString];
+    
+    // Display the authentication view
+    authController = [[[GTMOAuth2ViewControllerTouch alloc] initWithAuthentication:auth
+                                                                  authorizationURL:authURL
+                                                                  keychainItemName:kKeychainItemName
+                                                                          delegate:self
+                                                                  finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
+    
+    UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
+    [rootVC presentViewController:authController animated:YES completion:nil];
+    
+    authFinish = [success copy];
+}
+
 
 - (BOOL)authenticated {
     return [self.auth canAuthorize];
 }
 
-// JSON fetch boilerplate
 - (void)getJSON:(NSString*)path success:(void (^)(NSDictionary* json))success
-                                  error:(void (^)(NSError* error))error {
+          error:(void (^)(NSError* error))error {
+    
+    // Get JSON data from path 
     [self getData:path success:^(NSData *data) {
+        
         NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         success(json);
+        
     } error:error ];
 }
 
+/*
+ Helper Methods
+ */
+
 - (NSMutableURLRequest*)setupRequest:(NSString*)path {
-    NSString* urlString          = [[NSString alloc] initWithFormat:@"%@%@", kBrightBotAPIBase, path];
     
+    NSString* urlString          = [[NSString alloc] initWithFormat:@"%@%@", kBrightBotAPIBase, path];
     NSURL* url                   = [NSURL URLWithString:urlString];
     NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:url];
     
     return request;
 }
 
-- (void)sendData:(NSString*)path method:(NSString*)method data:(NSString*)data success:(void(^)(NSData* thisData))success
+- (void)sendData:(NSString*)path
+          method:(NSString*)method
+            data:(NSString*)data
+         success:(void(^)(NSData* thisData))success
            error:(void(^)(NSError* error))reqError {
     
     NSMutableURLRequest* request = [self setupRequest:path];
@@ -139,7 +207,8 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
                       // the request has been authorized
                       
                       [request setHTTPMethod:method];
-                      [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+                      [request setValue:@"application/x-www-form-urlencoded"
+                     forHTTPHeaderField:@"Content-type"];
                       
                       if ( data != nil ) {
                           NSString *postString = [NSString stringWithFormat:@"data=%@",data];
@@ -147,21 +216,26 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
                       }
                       
                       [NSURLConnection sendAsynchronousRequest:request
-                             queue:[NSOperationQueue mainQueue]
-                        completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-                        if (!response && requestError) {
-                         if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
-                             requestError.code == NSURLErrorUserCancelledAuthentication) {
-                             reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
-                                    [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-                         } else { // TODO handle 1) api offline, 2) error response in json
-                             NSLog(@"%@", requestError);
-                             reqError(requestError);
-                         }
-                         return;
-                        }
-                        success(body);
-                        }];
+                                                         queue:[NSOperationQueue mainQueue]
+                                             completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+                                                 
+                                                 if (!response && requestError) {
+                                                     if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
+                                                         requestError.code == NSURLErrorUserCancelledAuthentication) {
+                                                         reqError([NSError errorWithDomain:@"com.brightbot.sdk" code:0 userInfo:
+                                                                   [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
+                                                     } else { 
+                                                         NSLog(@"%@", requestError);
+                                                         reqError(requestError);
+                                                     }
+                                                     return;
+                                                 }
+                                                 
+                                                 success(body);
+                                             }];
+                  } else {
+                      // the request isn't authorized, pass error up
+                      reqError(error);
                   }
               }];
 
@@ -169,7 +243,11 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
 }
 
 
--(void)sendFile:(NSString*)path method:(NSString*)method data:(NSString*)data file_contents:(NSMutableDictionary*)file_contents success:(void(^)(NSData* thisData))success
+-(void)sendFile:(NSString*)path
+         method:(NSString*)method
+           data:(NSString*)data
+  file_contents:(NSMutableDictionary*)file_contents
+        success:(void(^)(NSData* thisData))success
           error:(void(^)(NSError* error))reqError {
     
     NSMutableURLRequest* request = [self setupRequest:path];
@@ -177,6 +255,8 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
     [self.auth authorizeRequest:request
               completionHandler:^(NSError *error) {
                   if (error == nil) {
+                      // We're going to build this form request ourselves.
+                      
                       // the request has been authorized
                       NSString *boundary = @"0Xvdfegrdf876fRD";
                       
@@ -210,29 +290,35 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
                       [NSURLConnection sendAsynchronousRequest:request
                                                          queue:[NSOperationQueue mainQueue]
                                              completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+                                                 
                                                  if (!response && requestError) {
                                                      if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
                                                          requestError.code == NSURLErrorUserCancelledAuthentication) {
-                                                         reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
+                                                         reqError([NSError errorWithDomain:@"com.brightbot.sdk" code:0 userInfo:
                                                                 [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-                                                     } else { // TODO handle 1) api offline, 2) error response in json
+                                                     } else { 
                                                          NSLog(@"%@", requestError);
                                                          reqError(requestError);
                                                      }
                                                      return;
                                                  }
+                                                 
                                                  success(body);
                                              }];
 
             
+                  } else {
+                      // the request isn't authorized, pass error up
+                      reqError(error);
                   }
               }];    
     
 }
 
-// URL fetch boilerplate
-- (void)getData:(NSString*)path success:(void (^)(NSData* thisData))success
+- (void)getData:(NSString*)path
+        success:(void (^)(NSData* thisData))success
           error:(void (^)(NSError* error))reqError {
+    
     NSMutableURLRequest* request = [self setupRequest:path];
     
     [self.auth authorizeRequest:request
@@ -243,309 +329,224 @@ static NSString *const kKeychainItemName = @"BrightBot OAuth";
                 [NSURLConnection sendAsynchronousRequest:request
                     queue:[NSOperationQueue mainQueue]
                     completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-                    if (!response && requestError) {
-                        if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
-                            requestError.code == NSURLErrorUserCancelledAuthentication) {
-                            reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
-                                   [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-                        } else { // TODO handle 1) api offline, 2) error response in json
-                            NSLog(@"%@", requestError);
-                            reqError(requestError);
+                        
+                        if (!response && requestError) {
+                            if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
+                                requestError.code == NSURLErrorUserCancelledAuthentication) {
+                                reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
+                                       [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
+                            } else {
+                                NSLog(@"%@", requestError);
+                                reqError(requestError);
+                            }
+                            return;
                         }
-                        return;
-                    }
+                        
                     success(body);
                     }];
+             } else {
+                 // the request isn't authorized, pass error up
+                 reqError(error);
              }
          }];
 
 }
 
-// Photo fetch boilerplate
-/*- (void)getPhoto:(NSString*)path success:(void (^)(UIImage* photo))success
-                                   error:(void (^)(NSError* error))error {
-    [self getData:path accept:@"image/jpeg" success:^(NSData *data) {
-        success([UIImage imageWithData:data]);
-    } error:error ];
-}*/
-
 /*
-- (void)getSchools:(void (^)(NSArray* schools))success error:(void (^)(NSError *error))error {
-    // NSString *path = [NSString stringWithFormat:@"/districts/%@/schools?limit=5000", self.districtID];
-    NSString *path = @"/schools?limit=5000";
-    [self getJSON:path success:^(NSDictionary* json) {
-        NSMutableArray* cleverSchools = [[NSMutableArray alloc] init];
-        for (NSDictionary* jsonSection in [json objectForKey:@"data"]) {
-            CleverSchool* school = [[CleverSchool alloc] initWithResponseDictionary:[jsonSection objectForKey:@"data"]];
-            [cleverSchools addObject:school];
-        }
-        success(cleverSchools);
-    } error:error];
-}
-*/
+    API Call Methods
+ */
 
-/*
-- (void)getStudentsFromPath:(NSString*)path success:(void (^)(NSArray* students))success
-                      error:(void (^)(NSError* error))error {
-    [self getJSON:path success:^(NSDictionary* json) {
-        NSMutableArray* cleverStudents = [[NSMutableArray alloc] init];
-        for (NSDictionary* jsonStudent in [json objectForKey:@"data"]) {
-            CleverStudent* cleverStudent = [[CleverStudent alloc] initWithResponseDictionary:[jsonStudent objectForKey:@"data"]];
-            [cleverStudents addObject:cleverStudent];
-        }
-        success(cleverStudents);
-    } error:error ];
-}
-*/
-
-- (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError* error))error {
+- (void)getStudents:(void (^)(NSArray* students))success
+              error:(void (^)(NSError* error))error {
     
-    if ( ![self authenticated] ) {
-        // Set error if a pointer for the error was given
-        if (error != NULL) {
-            NSError *err = [NSError errorWithDomain:@"com.brightbot.sdk"
-                                         code:100
-                                     userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-            error(err);
-        }
-    } else {
-        NSString* path = [NSString stringWithFormat:@"/students"];
-        [self getJSON:path success:^(NSDictionary* json) {
-            NSMutableArray* bbStudents = [[NSMutableArray alloc] init];
-            for (NSDictionary* jsonStudent in [json objectForKey:@"data"]) {
-                BBStudent* bbStudent = [[BBStudent alloc] initWithResponseDictionary:jsonStudent];
-                [bbStudents addObject:bbStudent];
-            }
-            success(bbStudents);
-        } error:error ];
-    }
-
-}
-
-
-- (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error {
-    if ( ![self authenticated] ) {
-        // Set error if a pointer for the error was given
-        if (error != NULL) {
-            error = [NSError errorWithDomain:@"com.brightbot.sdk"
-                                        code:100
-                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-        }
-    } else {
-    
-        // Check to see if the_student has NSData (files) in the dictionary
-        NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
-        NSMutableDictionary *student_files = [NSMutableDictionary
-                                     dictionaryWithDictionary:@{}];
-        
-        for(id key in the_student) {
-            id this_value = [the_student objectForKey:key];
-            
-            if ([this_value isKindOfClass:[NSData class]]) {
+    NSString* path = [NSString stringWithFormat:@"/students"];
+    [self getJSON:path
+          success:^(NSDictionary* json) {
               
-                // Remove this object from the student textual data and move to a new object
-                [student_dictionary removeObjectForKey:key];
-                [student_files setObject:this_value forKey:key];
-                
-            }
-        }
+              NSMutableArray* bbStudents = [[NSMutableArray alloc] init];
+              for (NSDictionary* jsonStudent in [json objectForKey:@"data"]) {
+                  BBStudent* bbStudent = [[BBStudent alloc] initWithResponseDictionary:jsonStudent];
+                  [bbStudents addObject:bbStudent];
+              }
+              success(bbStudents);
+          }
+            error:error ];
+
+}
+
+
+- (void)addStudent:(NSDictionary*)the_student
+           success:(void (^)(id data))success
+             error:(void (^)(NSError* error))error {
+    
+    // Check to see if the_student has NSData (files) in the dictionary
+    NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
+    NSMutableDictionary *student_files = [NSMutableDictionary dictionaryWithDictionary:@{}];
+    
+    for(id key in the_student) {
+        id this_value = [the_student objectForKey:key];
         
-        NSString* path = [NSString stringWithFormat:@"/students"];
-        
-        NSError *JSONerror;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
-                                                           options:0
-                                                             error:&JSONerror];
-        
-        if ([student_files count] > 0) {
-            // We have data files
+        if ([this_value isKindOfClass:[NSData class]]) {
             
-            [self sendFile:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
-                file_contents:student_files success:^(NSData *json) {
-                success(json);
-            } error:error ];
-        } else {
-            [self sendData:path method:@"POST" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] success:^(NSData *data) {
-                success(data);
-            } error:error ];
+            // Remove this object from the student textual data and move to a new object
+            [student_dictionary removeObjectForKey:key];
+            [student_files setObject:this_value forKey:key];
+            
         }
     }
     
-}
-
-- (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
+    NSString* path = [NSString stringWithFormat:@"/students"];
     
-    if ( ![self authenticated] ) {
-        // Set error if a pointer for the error was given
-        if (error != NULL) {
-            error = [NSError errorWithDomain:@"com.brightbot.sdk"
-                                        code:100
-                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-        }
-    } else {
+    NSError *JSONerror;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
+                                                       options:0
+                                                         error:&JSONerror];
+    
+    if ([student_files count] > 0) {
         
-        // Check to see if the_student has NSData (files) in the dictionary
-        NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
-        NSMutableDictionary *student_files = [NSMutableDictionary
-                                              dictionaryWithDictionary:@{}];
-        
-        for(id key in the_student) {
-            id this_value = [the_student objectForKey:key];
-            
-            if ([this_value isKindOfClass:[NSData class]]) {
+        // We have data files
+        [self sendFile:path method:@"POST"
+                  data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+            file_contents:student_files success:^(NSData *json) {
                 
-                // Remove this object from the student textual data and move to a new object
-                [student_dictionary removeObjectForKey:key];
-                [student_files setObject:this_value forKey:key];
+            success(json);
                 
-            }
-        }
-        
-        NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
-        
-        NSError *JSONerror;
-        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
-                                                           options:0
-                                                             error:&JSONerror];
-        
-        if ([student_files count] > 0) {
-            // We have data files
-            
-            [self sendFile:path method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
-             file_contents:student_files success:^(NSData *json) {
-                 success();
-             } error:error ];
-        } else {
-            [self sendData:path method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]  success:^(NSData *data) {
-                success();
-            } error:error ];
-        }
-    }
-    
-}
-
-- (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error {
-
-    if ( ![self authenticated] ) {
-        // Set error if a pointer for the error was given
-        if (error != NULL) {
-            error = [NSError errorWithDomain:@"com.brightbot.sdk"
-                                        code:100
-                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-        }
-    } else {
-    
-        NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
-        
-        [self sendData:path method:@"DELETE" data:nil success:^(NSData *data) {
-                success();
-            } error:error ];
-    }
-    
-}
-
-- (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error {
-    
-    if ( ![self authenticated] ) {
-        // Set error if a pointer for the error was given
-        if (error != NULL) {
-            error = [NSError errorWithDomain:@"com.brightbot.sdk"
-                                        code:100
-                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-        }
-    } else {
-        NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
-        [self getJSON:path success:^(NSDictionary* json) {
-            NSMutableArray* bbFileContents = [[NSMutableArray alloc] init];
-            for (NSDictionary* jsonFileContent in [json objectForKey:@"data"]) {
-                BBFileContent* bbContent = [[BBFileContent alloc] initWithResponseDictionary:jsonFileContent];
-                [bbFileContents addObject:bbContent];
-            }
-            success(bbFileContents);
         } error:error ];
-    }
-    
-}
-
-- (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error {
-    
-    if ( ![self authenticated] ) {
-        // Set error if a pointer for the error was given
-        if (error != NULL) {
-            error = [NSError errorWithDomain:@"com.brightbot.sdk"
-                                        code:100
-                                    userInfo:[NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not Authenticated"]  forKey:NSLocalizedDescriptionKey]];
-        }
     } else {
-        // Transform the passed in content to our internal JSON format
-        NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", [[NSBundle mainBundle] bundleIdentifier], content_data];
+        // No files to send to the server
         
-        NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
-        
-        NSMutableDictionary *file_contents = [NSMutableDictionary
-                                     dictionaryWithDictionary:@{
-                                     @"content" : the_file,
-                                     }];
-        [self sendFile:path method:@"POST" data:transformedContent file_contents:file_contents success:^(NSData *json) {
-            success();
+        [self sendData:path method:@"POST"
+                  data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+               success:^(NSData *data) {
+            
+            success(data);
+                   
         } error:error ];
+        
     }
     
 }
 
--(void)signOut {
+- (void)modifyStudent:(NSDictionary*)the_student
+              success:(void (^)(void))success
+                error:(void (^)(NSError* error))error {
     
-    [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
-    self.auth = nil;    
-}
-
-- (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error {
-    [self signOut];
+        
+    // Check to see if the_student has NSData (files) in the dictionary
+    NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
+    NSMutableDictionary *student_files = [NSMutableDictionary dictionaryWithDictionary:@{}];
     
-    GTMOAuth2Authentication *auth = [self brightbotAuth];
-    
-    // Specify the appropriate scope string, if any, according to the service's API documentation
-    auth.scope = @"read";
-    
-    NSString* urlString = [[NSString alloc] initWithFormat:@"%@/oauth/authorize", kBrightBotAPIBase];
-    NSURL *authURL = [NSURL URLWithString:urlString];
-    
-    // Display the authentication view
-    viewController = [[[GTMOAuth2ViewControllerTouch alloc] initWithAuthentication:auth
-        authorizationURL:authURL
-        keychainItemName:kKeychainItemName
-        delegate:self
-        finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
-    
-    UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
-    [rootVC presentViewController:viewController animated:YES completion:nil];
-
-    authFinish = [success copy];
-}
-
-/*
-- (void)getStudentsFor:(id)cleverObject success:(void (^)(NSArray* students))success
-                                          error:(void (^)(NSError *error))error {
-    // Students doesn't have a second level students endpoint
-    if ([cleverObject isKindOfClass:[CleverStudent class]]) {
-        error([NSError errorWithDomain:@"clever-ios" code:0 userInfo:nil]);
+    for(id key in the_student) {
+        id this_value = [the_student objectForKey:key];
+        
+        if ([this_value isKindOfClass:[NSData class]]) {
+            
+            // Remove this object from the student textual data and move to a new object
+            [student_dictionary removeObjectForKey:key];
+            [student_files setObject:this_value forKey:key];
+            
+        }
     }
-    [self getStudentsFromPath:[NSString stringWithFormat:@"%@/%@", [cleverObject url], @"students?limit=100"] success:success error:error];
+    
+    NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
+    
+    NSError *JSONerror;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
+                                                       options:0
+                                                         error:&JSONerror];
+    
+    if ( [student_files count] > 0) {
+        // We have data files
+        
+        [self sendFile:path method:@"PUT"
+                  data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+         file_contents:student_files
+               success:^(NSData *data) {
+                   
+                   // Nothing comes back from PUT requests
+                   success();
+                   
+               } error:error ];
+    } else {
+        
+        // No files to send to server
+        [self sendData:path
+                method:@"PUT" data:[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]
+               success:^(NSData *data) {
+                   
+                   // Nothing comes back from PUT requests
+                   success();
+                   
+               } error:error ];
+        
+    }
+    
 }
-*/
 
-/*
-- (void)getPhotoFor:(CleverStudent*)student success:(void (^)(UIImage* image))success error:(void (^)(NSError *error))error {
-    NSString *path = [NSString stringWithFormat:@"/students/%@/photo", student.guid];
-    [self getPhoto:path success:^(UIImage *photo) {
-        success(photo);
-    } error:error];
-}*/
-
-- (void)didReceiveMemoryWarning {
-    //[super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
-    // Release anything that's not essential, such as cached data
+- (void)removeStudent:(NSDictionary*)the_student
+              success:(void (^)(void))success
+                error:(void (^)(NSError* error))error {
+    
+    NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
+    
+    [self sendData:path method:@"DELETE"
+              data:nil
+           success:^(NSData *data) {
+               
+               // No data comes back from DELETE requests
+               success();
+               
+           } error:error ];
+    
 }
+
+- (void)getFileContents:(NSString*)student_id
+                success:(void (^)(NSArray* fileContents))success
+                  error:(void (^)(NSError* error))error {
+    
+    NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
+    
+    [self getJSON:path
+          success:^(NSDictionary* json) {
+              
+              NSMutableArray* bbFileContents = [[NSMutableArray alloc] init];
+              
+              for (NSDictionary* jsonFileContent in [json objectForKey:@"data"]) {
+                  BBFileContent* bbContent = [[BBFileContent alloc] initWithResponseDictionary:jsonFileContent];
+                  [bbFileContents addObject:bbContent];
+              }
+              
+              success(bbFileContents);
+          } error:error ];
+    
+}
+
+- (void)addFileContents:(NSString*)student_id
+                   data:content_data
+                   file:the_file
+                success:(void (^)(id data))success
+                  error:(void (^)(NSError* error))error {
+    
+    // Transform the passed in content to our internal JSON format
+    NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", [[NSBundle mainBundle] bundleIdentifier], content_data];
+    
+    NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
+    
+    NSMutableDictionary *file_contents = [NSMutableDictionary
+                                 dictionaryWithDictionary:@{
+                                 @"content" : the_file}];
+    [self sendFile:path
+            method:@"POST"
+              data:transformedContent
+     file_contents:file_contents
+           success:^(NSData *data) {
+               
+               success(data);
+               
+           } error:error ];
+    
+}
+
 
 @end
 

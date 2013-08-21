@@ -80,7 +80,7 @@
 - (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
-- (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
 - (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)signOut;
 
