@@ -22,12 +22,13 @@ void (^authFinish)();
 GTMOAuth2ViewControllerTouch *viewController;
 
 @synthesize auth = mAuth;
+@synthesize BBClientID = mBBClientID;
+@synthesize BBClientSecret = mBBClientSecret;
 
 // TODO need to make sure that the API is initialized before allowing any calls
 
 static NSString *const kKeychainItemName = @"BrightBot OAuth";
-NSString *kBBClientID = @"e5b57ef0b9bc69fb376f1a8f294971f61ee1b956";     // pre-assigned by service
-NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-assigned by service
+
 
 - (GTMOAuth2Authentication *)brightbotAuth {
     
@@ -43,8 +44,8 @@ NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-
     auth = [GTMOAuth2Authentication authenticationWithServiceProvider:@"BrightBot Service"
                                                              tokenURL:tokenURL
                                                           redirectURI:redirectURI
-                                                             clientID:kBBClientID
-                                                         clientSecret:kBBClientSecret];
+                                                             clientID:self.BBClientID
+                                                         clientSecret:self.BBClientSecret];
     return auth;
 }
 
@@ -65,22 +66,6 @@ NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-
 }
 
 - (id)init {
-    // Get the saved authentication, if any, from the keychain.
-    GTMOAuth2Authentication *auth = nil;
-    
-    auth = [self brightbotAuth];
-    if (auth) {
-        
-        BOOL didAuth = [GTMOAuth2ViewControllerTouch authorizeFromKeychainForName:kKeychainItemName
-                                                                   authentication:auth
-                                                                            error:NULL];
-    }
-    
-    // Retain the authentication object, which holds the auth tokens
-    //
-    // We can determine later if the auth object contains an access token
-    // by calling its -canAuthorize method
-    self.auth = auth;
     
     return self;
 }
@@ -97,6 +82,28 @@ NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-
         
         return sharedInstance;
     }
+}
+
+- (void)configure:(NSString *)client_id client_secret:(NSString *)client_secret {
+    self.BBClientID = client_id;
+    self.BBClientSecret = client_secret;
+    
+    // Get the saved authentication, if any, from the keychain.
+    GTMOAuth2Authentication *auth = nil;
+    
+    auth = [self brightbotAuth];
+    if (auth) {
+        
+        BOOL didAuth = [GTMOAuth2ViewControllerTouch authorizeFromKeychainForName:kKeychainItemName
+                                                                   authentication:auth
+                                                                            error:NULL];
+    }
+    
+    // Retain the authentication object, which holds the auth tokens
+    //
+    // We can determine later if the auth object contains an access token
+    // by calling its -canAuthorize method
+    self.auth = auth;
 }
 
 - (BOOL)authenticated {
@@ -492,7 +499,7 @@ NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-
     self.auth = nil;    
 }
 
-- (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error {
     [self signOut];
     
     GTMOAuth2Authentication *auth = [self brightbotAuth];

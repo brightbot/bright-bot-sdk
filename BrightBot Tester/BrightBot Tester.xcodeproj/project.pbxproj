@@ -14,7 +14,6 @@
 		9A03901B17C5028700A5B115 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A03901917C5028700A5B115 /* GTMOAuth2ViewTouch.xib */; };
 		9A03901D17C5029A00A5B115 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A03901C17C5029A00A5B115 /* Security.framework */; };
 		9A03901F17C5029F00A5B115 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A03901E17C5029F00A5B115 /* SystemConfiguration.framework */; };
-		9A03902017C506D200A5B115 /* GTMHTTPFetcher.h in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901417C5026700A5B115 /* GTMHTTPFetcher.h */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9A03902117C506D200A5B115 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901517C5026700A5B115 /* GTMHTTPFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9A1C8D0D17A1B08F00B62D15 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 9A1C8D0C17A1B08F00B62D15 /* data */; };
 		9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FB1796E53B0036B677 /* UIKit.framework */; };
@@ -318,7 +317,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9A03902017C506D200A5B115 /* GTMHTTPFetcher.h in Sources */,
 				9A03902117C506D200A5B115 /* GTMHTTPFetcher.m in Sources */,
 				9AA5D1081796E53B0036B677 /* main.m in Sources */,
 				9AA5D10C1796E53B0036B677 /* AppDelegate.m in Sources */,

@@ -1,89 +1,100 @@
-# clever-ios
+# BrightBot SDK
 
 ## Overview
 
-Issuing HTTP requests and parsing JSON is a cumbersome process in iOS and Objective-C. `clever-ios` abstracts away all of the HTTP/JSON plumbing and lets you consume the Clever API quickly and easily using familiar iOS constructs and patterns. These iOS classes closely mirror the REST endpoints documented [here](http://getclever.com/developers/docs), but note that not all endpoints are currently supported. Pull requests are welcome!
+The BrightBot SDK abstracts all the complex functionality of interacting with a OAuth-enabled REST web API in iOS. The BrightBot API is an easy to use web service that allows developers to build rich in-app interactions with classrooms in an education setting. BrightBot takes away some of the complexity of managing students, teachers, and the content they generate to provide a platform that can be integrated easily into your existing application. 
 
 ## Getting started
 
 There are two options for including the SDK in your project:
 
-1. Download the source from [github](https://github.com/Clever/clever-ios/zipball/master), and unzip it into a folder within your Xcode project.
+1. Download the source from [github](https://github.com/brightbot/bright-bot-sdk), and unzip it into a folder within your Xcode project.
 
-2. If you're using git, add the `clever-ios` repository as a submodule among your project's other source files:
+2. If you're using git, you can add the `bright-bot-sdk` repository as a submodule among your project's other source files:
 
 ```bash
-$ git submodule add git@github.com:Clever/clever-ios.git clever-ios
+$ git submodule add git@github.com:brightbot/bright-bot-sdk.git bright-bot-sdk
 ```
+3. Add the related source files and controllers to you Xcode project by dragging them into your project:
+GTMOAuth2Authentication.h/m
+GTMOAuth2SignIn.h/m
+GTMHTTPFetcher.h/m
+GTMOAuth2ViewControllerTouch.h/m
+GTMOAuth2ViewTouch.xib
+BrightBot.h/.m
 
-The `Clever` class is the entrypoint for making requests to the API. You can instantiate it by including `Clever.h` and calling the `initWithAPIKey` method:
+![Xcode source files](http://cl.ly/image/243S0U0E2G3e "Source Files")
+
+> ARC Compatibility
+> When the controller source files are compiled directly into a project that has ARC enabled, then ARC must be disabled specifically for the controller source files.
+
+> To disable ARC for source files in Xcode 4, select the project and the target in Xcode. Under the target "Build Phases" tab, expand the Compile Sources build phase, select the library source files, then press Enter to open an edit field, and type -fno-objc-arc as the compiler flag for those files. This only applies to the source files that start with GTM*.
+
+4. Add the standard Security.framework and SystemConfiguration.framework to your project
+
+5. Ensure that under the "Build Phases" tab, the GTM*.m and BrightBot.m files are listed under "Compile Sources"
+
+The `BrightBot` class is the main class you'll interact with as a BrightBot developer. 
+You can instantiate it by including `BrightBot.h` and calling the `configure` method with the BrightBot sharedInstance:
 
 ```objective-c
-#import "Clever.h"
+#import "BrightBot.h"
 
 ...
 
-Clever* api = [[Clever alloc] initWithAPIKey:"DEMO_KEY"];
+BrightBot* api = [[BrightBot sharedInstance] configure:@"d3a9730bebe8b0595466fed04de5fb559fc93fa8" client_secret:@"1f0b998fe5fcb48b5adeb359e773cdda3237ba0f"];
 ```
 
-We recommend making this instance a property within you application's UIApplicationDelegate, since it will be used extensively.
+## Authenticating
+
+You can figure out of the current user is authenticated through the 'authenticated' method:
+
+```objective-c
+
+if ( ! [[BrightBot sharedInstance] authenticated] ) {
+
+	...
+
+}
+
+```
+
+If the user need to authenticate with the BrightBot system, you can call the 'authenticate' method:
+
+```objective-c
+
+[[BrightBot sharedInstance] authenticate:^() {
+			// User was authenticated
+             
+        }
+     	error:^(NSError *error) {
+			// User failed to authenticate
+		}];
+
+```
+
+If you want to programatically log the user out of the system, use the 'signOut' method:
+
+```objective-c
+
+[[BrightBot sharedInstance] signOut];
+
+```
 
 ## Getting data
 
-Once you have an instance of the `Clever` class you can start querying the API for the data your API key has been authorized to access. For example, to get a list of all the schools that have granted you access to their data, use the `getSchools` method:
+Once you have an authenticated instance of the `BrightBot` class you can query the API and send data to the API. One simple example is the 'getStudents' methods that returns the current user's list of students. The 'getStudents' method returns an NSArray of BBStudent objects on success:
 
 ```objective-c
-[clever getSchools:^(NSArray* schools) {
-    for (school in schools) {
-        NSLog(@"%@", school);
-    }
-} error:^(NSError* error) {
-    NSLog(@"error retrieving students %@", error);
-}];
+
+[[BrightBot sharedInstance] getStudents:^(NSArray* students) {
+        for (BBStudent* student in students) {
+            NSLog(@"Student %@:%@", student.guid, student.name);
+        }
+    } error:^(NSError* error) {
+        NSLog(@"error retrieving students %@", error);
+    }];
+
 ```
 
-Similarly, you can query for all the sections and students visible to your API key using the `getSections` and `getStudents` methods, respectively. Each of these methods returns Objective-C objects with properties corresponding to the JSON fields seen in the raw API. For example the `getStudents` function returns an array of `CleverStudent` objects with the following properties:
-
-* guid
-* lastModified
-* studentNumber
-* stateID
-* sisID
-* firstName
-* middleName
-* lastName
-* address
-* city
-* state
-* zip
-* lat
-* lon
-* gender
-* dob
-* grade
-* frlStatus
-* race
-
-## Digging deeper
-
-The `Clever` class provides useful functions to dig deeper into the data, for example you can pass a student object to `getContactsFor` to get contacts for a student (parents/guardians phone, email, etc.). A student's photo is accessible using the `getPhotoFor` method. The best reference for SDK methods is the `Clever` interface definition itself, reproduced here from `Clever.h`:
-
-```objective-c
-@interface Clever : NSObject
-
-- (id)initWithAPIKey:(NSString *)key;
-- (void)getContactsFor:(CleverStudent*)student success:(void (^)(NSArray* studentContacts))success error:(void (^)(NSError *error))error;
-- (void)getTeacherFor:(CleverSection*)section success:(void (^)(CleverTeacher* teacher))success error:(void (^)(NSError *error))error;
-- (void)getSchools:(void (^)(NSArray* schools))success error:(void (^)(NSError *error))error;
-- (void)getSections:(void (^)(NSArray* sections))success error:(void (^)(NSError *error))error;
-- (void)getSectionsFor:(CleverSchool*)school success:(void (^)(NSArray* sections))success error:(void (^)(NSError *error))error;
-- (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
-- (void)getStudentsFor:(id)cleverObject success:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
-- (void)getPhotoFor:(CleverStudent*)student success:(void (^)(UIImage* image))success error:(void (^)(NSError *error))error;
-
-@end
-```
-
-## Questions/Comments
-
-Don't hesitate to file an issue, make a feature request, or contact us at [clever-ios@getclever.com](mailto:clever-ios@getclever.com)!
+There are other SDK methods that allow you to add students, modify students, and add file content to students. Please feel free to explore the SDK!

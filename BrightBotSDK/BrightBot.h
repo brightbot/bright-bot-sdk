@@ -62,21 +62,26 @@
 
 @interface BrightBot : NSObject {
     GTMOAuth2Authentication *mAuth;
+    NSString *mBBClientID;
+    NSString *mBBClientSecret;
 }
 
 @property (nonatomic, retain) GTMOAuth2Authentication *auth;
+@property (nonatomic, retain) NSString *BBClientID;
+@property (nonatomic, retain) NSString *BBClientSecret;
 
 
 + (BrightBot *)sharedInstance;
 
 - (BOOL)authenticated;
+- (void)configure:(NSString *)client_id client_secret:(NSString *)client_secret;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
 - (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
 - (void)addFileContents:(NSString*)student_id data:content_data file:the_file success:(void (^)(void))success error:(void (^)(NSError* error))error;
-- (void)authenticate:(NSString *)api_key success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)signOut;
 
 @end

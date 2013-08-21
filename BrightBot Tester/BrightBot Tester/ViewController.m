@@ -21,7 +21,10 @@ NSArray *our_students;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
+    
+    // Initially configure the BrightBot sharedInstance
+    [[BrightBot sharedInstance] configure:@"d3a9730bebe8b0595466fed04de5fb559fc93fa8" client_secret:@"1f0b998fe5fcb48b5adeb359e773cdda3237ba0f"];
+    
     if ( [[BrightBot sharedInstance] authenticated] ) {
         [[self loginButton] setTitle:@"Log out" forState:UIControlStateNormal];
     } else {
@@ -93,8 +96,7 @@ NSArray *our_students;
 
 - (IBAction)login:(id)sender {
     if ( ! [[BrightBot sharedInstance] authenticated] ) {
-        [[BrightBot sharedInstance] authenticate:kAPIKey
-         success:^() {
+        [[BrightBot sharedInstance] authenticate:^() {
              // Any finalization tasks
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Logged in!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
