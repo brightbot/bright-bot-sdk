@@ -67,14 +67,13 @@ NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-
 - (id)init {
     // Get the saved authentication, if any, from the keychain.
     GTMOAuth2Authentication *auth = nil;
-    auth = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName
-                clientID:kBBClientID
-                clientSecret:kBBClientSecret];
+    
+    auth = [self brightbotAuth];
     if (auth) {
-        BOOL didAuth = [GTMOAuth2ViewControllerTouch
-                        authorizeFromKeychainForName:@"BrightBot Service"
-                        authentication:auth
-                        error:NULL];
+        
+        BOOL didAuth = [GTMOAuth2ViewControllerTouch authorizeFromKeychainForName:kKeychainItemName
+                                                                   authentication:auth
+                                                                            error:NULL];
     }
     
     // Retain the authentication object, which holds the auth tokens
@@ -123,89 +122,105 @@ NSString *kBBClientSecret = @"6c00cd542d689b7eb7c84712757751c9585323ff"; // pre-
 }
 
 - (void)sendData:(NSString*)path method:(NSString*)method data:(NSString*)data success:(void(^)(NSData* thisData))success
-           error:(void(^)(NSError* error))error {
+           error:(void(^)(NSError* error))reqError {
+    
     NSMutableURLRequest* request = [self setupRequest:path];
     
-    [request setHTTPMethod:method];
-    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
-    
-    if ( data != nil ) {
-        NSString *postString = [NSString stringWithFormat:@"data=%@",data];
-        [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-        
-    [NSURLConnection sendAsynchronousRequest:request
-           queue:[NSOperationQueue mainQueue]
-    completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-        if (!response && requestError) {
-           if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
-               requestError.code == NSURLErrorUserCancelledAuthentication) {
-               error([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
-                      [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-           } else { // TODO handle 1) api offline, 2) error response in json
-               NSLog(@"%@", requestError);
-               error(requestError);
-           }
-           return;
-        }
-        success(body);
-    }];
-    
+    [self.auth authorizeRequest:request
+              completionHandler:^(NSError *error) {
+                  if (error == nil) {
+                      // the request has been authorized
+                      
+                      [request setHTTPMethod:method];
+                      [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-type"];
+                      
+                      if ( data != nil ) {
+                          NSString *postString = [NSString stringWithFormat:@"data=%@",data];
+                          [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+                      }
+                      
+                      [NSURLConnection sendAsynchronousRequest:request
+                             queue:[NSOperationQueue mainQueue]
+                        completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+                        if (!response && requestError) {
+                         if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
+                             requestError.code == NSURLErrorUserCancelledAuthentication) {
+                             reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
+                                    [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
+                         } else { // TODO handle 1) api offline, 2) error response in json
+                             NSLog(@"%@", requestError);
+                             reqError(requestError);
+                         }
+                         return;
+                        }
+                        success(body);
+                        }];
+                  }
+              }];
+
     
 }
 
 
 -(void)sendFile:(NSString*)path method:(NSString*)method data:(NSString*)data file_contents:(NSMutableDictionary*)file_contents success:(void(^)(NSData* thisData))success
-          error:(void(^)(NSError* error))error {
+          error:(void(^)(NSError* error))reqError {
     
     NSMutableURLRequest* request = [self setupRequest:path];
     
-    NSString *boundary = @"0Xvdfegrdf876fRD";
-    
-    [request setHTTPMethod:method];
-    
-    // Build the multi-part form submission to the API
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-    
-    NSMutableData *body = [NSMutableData data];
-    
-    // Do this for each file_content file object we have
-    for(id key in file_contents) {
-        NSData *this_file = [file_contents objectForKey:key];
-        
-        [body appendData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@.file\"\r\n",(NSString*)key,(NSString*)key] dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n"
-                          dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[NSData dataWithData:this_file]];
-    }
-    
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[@"Content-Disposition: form-data; name=\"data\";\r\n\r\n"
-                      dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[data dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [self.auth authorizeRequest:request
+              completionHandler:^(NSError *error) {
+                  if (error == nil) {
+                      // the request has been authorized
+                      NSString *boundary = @"0Xvdfegrdf876fRD";
+                      
+                      [request setHTTPMethod:method];
+                      
+                      // Build the multi-part form submission to the API
+                      NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+                      [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+                      
+                      NSMutableData *body = [NSMutableData data];
+                      
+                      // Do this for each file_content file object we have
+                      for(id key in file_contents) {
+                          NSData *this_file = [file_contents objectForKey:key];
+                          
+                          [body appendData:[[NSString stringWithFormat:@"--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                          [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@.file\"\r\n",(NSString*)key,(NSString*)key] dataUsingEncoding:NSUTF8StringEncoding]];
+                          [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n"
+                                            dataUsingEncoding:NSUTF8StringEncoding]];
+                          [body appendData:[NSData dataWithData:this_file]];
+                      }
+                      
+                      [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                      [body appendData:[@"Content-Disposition: form-data; name=\"data\";\r\n\r\n"
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
+                      [body appendData:[data dataUsingEncoding:NSUTF8StringEncoding]];
+                      [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+                      
+                      [request setHTTPBody:body];
+                      
+                      [NSURLConnection sendAsynchronousRequest:request
+                                                         queue:[NSOperationQueue mainQueue]
+                                             completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
+                                                 if (!response && requestError) {
+                                                     if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
+                                                         requestError.code == NSURLErrorUserCancelledAuthentication) {
+                                                         reqError([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
+                                                                [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
+                                                     } else { // TODO handle 1) api offline, 2) error response in json
+                                                         NSLog(@"%@", requestError);
+                                                         reqError(requestError);
+                                                     }
+                                                     return;
+                                                 }
+                                                 success(body);
+                                             }];
 
-    [request setHTTPBody:body];
+            
+                  }
+              }];    
     
-    [NSURLConnection sendAsynchronousRequest:request
-                   queue:[NSOperationQueue mainQueue]
-       completionHandler:^(NSURLResponse* response, NSData* body, NSError* requestError) {
-           if (!response && requestError) {
-               if ([requestError.domain isEqualToString:@"NSURLErrorDomain"] &&
-                   requestError.code == NSURLErrorUserCancelledAuthentication) {
-                   error([NSError errorWithDomain:@"BrightBot" code:0 userInfo:
-                          [NSDictionary dictionaryWithObject:@"Authentication failed" forKey:@"message"]]);
-               } else { // TODO handle 1) api offline, 2) error response in json
-                   NSLog(@"%@", requestError);
-                   error(requestError);
-               }
-               return;
-           }
-           success(body);
-       }];
-
 }
 
 // URL fetch boilerplate
