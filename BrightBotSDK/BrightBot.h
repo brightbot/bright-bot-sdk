@@ -7,8 +7,8 @@
 
 #import "GTMOAuth2Authentication.h"
 
-#define kBrightBotAPIBase @"http://api.localhost:10080" //:10080"
-//#define kBrightBotAPIBase @"http://api.brightbot.co"
+//#define kBrightBotAPIBase @"http://api.localhost:10080" //:10080"
+#define kBrightBotAPIBase @"https://api.brightbot.co"
 #define kBrightBotAPIVersion @"v1"
 
 @interface BBFileContent : NSObject
