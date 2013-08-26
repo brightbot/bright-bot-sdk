@@ -13,7 +13,6 @@
 
 @interface BBFileContent : NSObject
 @property (strong, nonatomic) NSString* guid;
-@property (strong, nonatomic) NSString* app_id;
 @property (strong, nonatomic) NSString* metadata;
 @property (strong, nonatomic) NSString* path;
 - (id)initWithResponseDictionary:(NSDictionary*)content;

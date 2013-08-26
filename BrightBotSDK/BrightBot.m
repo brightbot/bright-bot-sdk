@@ -528,7 +528,7 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
                   error:(void (^)(NSError* error))error {
     
     // Transform the passed in content to our internal JSON format
-    NSString *transformedContent = [NSString stringWithFormat:@"{\"app_id\":\"%@\", \"item_meta\":\"%@\"}", [[NSBundle mainBundle] bundleIdentifier], content_data];
+    NSString *transformedContent = [NSString stringWithFormat:@"{\"item_meta\":\"%@\"}", content_data];
     
     NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
     
@@ -551,11 +551,10 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 @end
 
 @implementation BBFileContent
-@synthesize guid, app_id, metadata, path;
+@synthesize guid, metadata, path;
 - (id)initWithResponseDictionary:(NSDictionary *)student {
     if ((self = [super init])) {
         self.guid           = [student objectForKey:@"id"];
-        self.app_id         = [student objectForKey:@"app_id"];
         self.metadata       = [student objectForKey:@"metadata"];
         self.path           = [student objectForKey:@"path"];
     }
