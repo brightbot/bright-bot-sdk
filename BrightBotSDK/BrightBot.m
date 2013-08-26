@@ -359,7 +359,7 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 - (void)getStudents:(void (^)(NSArray* students))success
               error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/students"];
+    NSString* path = [NSString stringWithFormat:@"/student"];
     [self getJSON:path
           success:^(NSDictionary* json) {
               
@@ -395,7 +395,7 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
         }
     }
     
-    NSString* path = [NSString stringWithFormat:@"/students"];
+    NSString* path = [NSString stringWithFormat:@"/student"];
     
     NSError *JSONerror;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
