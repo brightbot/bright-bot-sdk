@@ -23,7 +23,8 @@ NSArray *our_students;
 	// Do any additional setup after loading the view, typically from a nib.
     
     // Initially configure the BrightBot sharedInstance
-    [[BrightBot sharedInstance] configure:@"d3a9730bebe8b0595466fed04de5fb559fc93fa8" client_secret:@"1f0b998fe5fcb48b5adeb359e773cdda3237ba0f"];
+    [[BrightBot sharedInstance] configure:kBBClientID
+                            client_secret:kBBClientSecret];
     
     if ( [[BrightBot sharedInstance] authenticated] ) {
         [[self loginButton] setTitle:@"Log out" forState:UIControlStateNormal];

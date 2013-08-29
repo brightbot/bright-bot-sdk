@@ -186,6 +186,10 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 
 - (NSMutableURLRequest*)setupRequest:(NSString*)path {
     
+    // Before every request save state in keychain... for now.
+    [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                                               authentication:self.auth];
+    
     NSString* urlString          = [[NSString alloc] initWithFormat:@"%@/%@%@", kBrightBotAPIBase, kBrightBotAPIVersion, path];
     NSURL* url                   = [NSURL URLWithString:urlString];
     NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:url];
