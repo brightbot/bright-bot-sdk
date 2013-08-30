@@ -97,4 +97,23 @@ Once you have an authenticated instance of the `BrightBot` class you can query t
 
 ```
 
+## Adding profile pictures for students
+
+When building the NSDictionary representing the student object you want created, you simply need to attach a 'profile_picture' key that contains the NSData* containing the image.
+
+
+```objective-c
+
+NSData* the_profile_picture = [[NSFileManager defaultManager] contentsAtPath:<file path>];
+
+NSDictionary *studentData = @{
+    @"name" : @"Student Name",
+    @"profile_picture" : the_profile_picture
+};
+
+[[BrightBot sharedInstance] addStudent:studentData ... ]
+
+
+```
+
 There are other SDK methods that allow you to add students, modify students, and add file content to students. Please feel free to explore the SDK!
