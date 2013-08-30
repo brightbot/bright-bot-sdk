@@ -556,24 +556,28 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 @end
 
 @implementation BBFileContent
-@synthesize guid, metadata, path;
-- (id)initWithResponseDictionary:(NSDictionary *)student {
+@synthesize guid, metadata, path, created, updated;
+- (id)initWithResponseDictionary:(NSDictionary *)file_content {
     if ((self = [super init])) {
-        self.guid           = [student objectForKey:@"id"];
-        self.metadata       = [student objectForKey:@"metadata"];
-        self.path           = [student objectForKey:@"path"];
-        self.updated        = [student objectForKey:@"updated"];
+        self.guid           = [file_content objectForKey:@"id"];
+        self.metadata       = [file_content objectForKey:@"metadata"];
+        self.path           = [file_content objectForKey:@"path"];
+        self.created        = [file_content objectForKey:@"created"];
+        self.updated        = [file_content objectForKey:@"updated"];
     }
     return self;
 }
 @end
  
 @implementation BBStudent
-@synthesize guid, name;
+@synthesize guid, name, profile_picture, created, updated;
 - (id)initWithResponseDictionary:(NSDictionary *)student {
     if ((self = [super init])) {
         self.guid          = [student objectForKey:@"id"];
         self.name          = [student objectForKey:@"name"];
+        self.profile_picture = [student objectForKey:@"profile_picture"];
+        self.created        = [student objectForKey:@"created"];
+        self.updated        = [student objectForKey:@"updated"];
     }
     return self;
 }

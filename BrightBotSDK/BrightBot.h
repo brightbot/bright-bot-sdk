@@ -15,6 +15,7 @@
 @property (strong, nonatomic) NSString* guid;
 @property (strong, nonatomic) NSString* metadata;
 @property (strong, nonatomic) NSString* path;
+@property (strong, nonatomic) NSNumber* created;
 @property (strong, nonatomic) NSNumber* updated;
 - (id)initWithResponseDictionary:(NSDictionary*)content;
 @end
@@ -22,6 +23,9 @@
 @interface BBStudent : NSObject
 @property (strong, nonatomic) NSString* guid;
 @property (strong, nonatomic) NSString* name;
+@property (strong, nonatomic) NSNumber* created;
+@property (strong, nonatomic) NSNumber* updated;
+@property (strong, nonatomic) NSString* profile_picture;
 - (id)initWithResponseDictionary:(NSDictionary*)student;
 @end
 
