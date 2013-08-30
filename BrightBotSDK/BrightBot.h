@@ -64,6 +64,7 @@
     GTMOAuth2Authentication *mAuth;
     NSString *mBBClientID;
     NSString *mBBClientSecret;
+    NSString *fileUrl;
 }
 
 @property (nonatomic, retain) GTMOAuth2Authentication *auth;
@@ -72,7 +73,6 @@
 
 
 + (BrightBot *)sharedInstance;
-
 - (BOOL)authenticated;
 - (void)configure:(NSString *)client_id client_secret:(NSString *)client_secret;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;

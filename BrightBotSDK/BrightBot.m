@@ -25,10 +25,11 @@ GTMOAuth2ViewControllerTouch *authController;
 @synthesize BBClientID = mBBClientID;
 @synthesize BBClientSecret = mBBClientSecret;
 
-// TODO need to make sure that the API is initialized before allowing any calls
-
 static NSString *const kKeychainItemName = @"BrightBot OAuth";
 static NSString *const kServiceProviderName = @"BrightBot Service";
+
+static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
+- (NSString*) fileUrl { return theFileUrl; }
 
 /*
  Authentication and Instantiation Methods
