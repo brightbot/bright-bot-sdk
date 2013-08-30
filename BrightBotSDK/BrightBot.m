@@ -562,6 +562,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
         self.guid           = [student objectForKey:@"id"];
         self.metadata       = [student objectForKey:@"metadata"];
         self.path           = [student objectForKey:@"path"];
+        self.updated        = [student objectForKey:@"updated"];
     }
     return self;
 }

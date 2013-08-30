@@ -15,6 +15,7 @@
 @property (strong, nonatomic) NSString* guid;
 @property (strong, nonatomic) NSString* metadata;
 @property (strong, nonatomic) NSString* path;
+@property (strong, nonatomic) NSNumber* updated;
 - (id)initWithResponseDictionary:(NSDictionary*)content;
 @end
 
@@ -71,6 +72,7 @@
 @property (nonatomic, retain) NSString *BBClientID;
 @property (nonatomic, retain) NSString *BBClientSecret;
 
+- (NSString*) fileUrl;
 
 + (BrightBot *)sharedInstance;
 - (BOOL)authenticated;
