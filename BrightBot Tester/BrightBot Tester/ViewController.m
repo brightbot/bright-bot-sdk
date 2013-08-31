@@ -246,4 +246,36 @@ NSArray *our_students;
                                             }];
     }
 }
+
+- (IBAction)logProgress:(id)sender {
+    
+    if (our_students == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    } else {
+        // We're good, we have students
+        BBStudent *first_student = [our_students objectAtIndex:0];
+        
+        BBActivityProgress *progress = [[BBActivityProgress alloc] init];
+        progress.activity_tag = @"math1";
+        progress.progress = [NSNumber numberWithInt:50];
+        progress.goal = [NSNumber numberWithInt:100];
+        
+        NSArray *progress_items = [NSArray arrayWithObjects:progress, nil];
+        
+        [[BrightBot sharedInstance] logProgress:first_student.guid
+                                     time_spent:[NSNumber numberWithInt:20]
+                                           data:progress_items
+                                        success:^(void) {
+                                          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Progress was logged." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                          [alert show];
+                                          [alert release];
+                                        }
+                                          error:^(NSError* error) {
+                                            NSLog(@"error removing student %@", error);
+                                        }];
+    }
+    
+}
 @end

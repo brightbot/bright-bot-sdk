@@ -361,6 +361,39 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     API Call Methods
  */
 
+- (void)logProgress:(NSString*)student_id
+         time_spent:(NSNumber*)time_spent
+                     data:(NSArray*)progress_items
+                     success:(void (^)(void))success
+                     error:(void (^)(NSError* error))error {
+    
+    /*
+     params = {
+     'activities': '[{"activity_tag":"tag1", "progress":"50", "goal":"100"}]',  # One activity progress
+     'time_spent': '30'
+     }
+     */
+    NSMutableString *progress_data = [NSMutableString stringWithString:@"{\"activities\":["];
+    for (BBActivityProgress* progress_item in progress_items) {
+        [progress_data appendString:[progress_item toJSON]];
+    }
+    [progress_data appendString:@"], "];
+    NSString *time = [NSString stringWithFormat:@"\"time_spent\":%@}", time_spent];
+    [progress_data appendString:time];    
+    
+    NSLog(progress_data);
+    NSString* path = [NSString stringWithFormat:@"/progress/%@", student_id];
+    
+    [self sendData:path method:@"POST"
+              data:progress_data
+           success:^(NSData *data) {
+               
+               // No data comes back from this POST request
+               success();
+               
+           } error:error];
+}
+
 - (void)getStudents:(void (^)(NSArray* students))success
               error:(void (^)(NSError* error))error {
     
@@ -527,7 +560,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 }
 
 - (void)addFileContents:(NSString*)student_id
-                   data:content_data
+                   data:(NSString*)content_data
                    file:the_file
                 success:(void (^)(id data))success
                   error:(void (^)(NSError* error))error {
@@ -582,7 +615,21 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     return self;
 }
 @end
-
+     
+@implementation BBActivityProgress
+@synthesize activity_tag, progress, goal;
+- (NSString*)toJSON {
+    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:(self.activity_tag  != nil ? self.activity_tag : @"") forKey:@"activity_tag"];
+    [dict setObject:(self.progress      != nil ? self.progress : @"") forKey:@"progress"];
+    [dict setObject:(self.goal          != nil ? self.goal : @"") forKey:@"goal"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict options:kNilOptions error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    return jsonString;
+}
+@end
 
 @implementation BBTeacher
 @synthesize guid, lastModified, sisID, email, firstName, middleName, lastName, title;
@@ -611,56 +658,4 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     [dict setObject:(self.title        != nil ? self.title : @"") forKey:@"title"];
     return [dict description];
 }
-- (NSString*)url {
-    return [NSString stringWithFormat:@"/teachers/%@", self.guid];
-}
 @end
-
-@implementation BBSchool
-@synthesize guid, lastModified, sisID, stateID, ncesID, schoolNumber, lowGrade, highGrade, principalName, principalEmail, name, address, city, state, zip, phone;
-- (id) initWithResponseDictionary:(NSDictionary *)school {
-    if ((self = [super init])) {
-        self.guid =           [school objectForKey:@"guid"];
-        self.lastModified =   [school objectForKey:@"last_modified"];
-        self.sisID =          [school objectForKey:@"sis_id"];
-        self.stateID =        [school objectForKey:@"state_id"];
-        self.ncesID =         [school objectForKey:@"nces_id"];
-        self.schoolNumber =   [school objectForKey:@"school_number"];
-        self.lowGrade =       [school objectForKey:@"low_grade"];
-        self.highGrade =      [school objectForKey:@"high_grade"];
-        self.principalName =  [[school objectForKey:@"principal"] objectForKey:@"name"];
-        self.principalEmail = [[school objectForKey:@"principal"] objectForKey:@"email"];
-        self.name =           [school objectForKey:@"name"];
-        self.address =        [[school objectForKey:@"location"] objectForKey:@"address"];
-        self.city =           [[school objectForKey:@"location"] objectForKey:@"city"];
-        self.state =          [[school objectForKey:@"location"] objectForKey:@"state"];
-        self.zip =            [[school objectForKey:@"location"] objectForKey:@"zip"];
-        self.phone =          [school objectForKey:@"phone"];
-    }
-    return self;
-}
-- (NSString*)description {
-    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:(self.guid           != nil ? self.guid : @"") forKey:@"guid"];
-    [dict setObject:(self.lastModified   != nil ? self.lastModified : @"") forKey:@"lastModified"];
-    [dict setObject:(self.sisID          != nil ? self.sisID : @"") forKey:@"sisID"];
-    [dict setObject:(self.stateID        != nil ? self.stateID : @"") forKey:@"stateID"];
-    [dict setObject:(self.ncesID         != nil ? self.ncesID : @"") forKey:@"ncesID"];
-    [dict setObject:(self.schoolNumber   != nil ? self.schoolNumber : @"") forKey:@"schoolNumber"];
-    [dict setObject:(self.lowGrade       != nil ? self.lowGrade : @"") forKey:@"lowGrade"];
-    [dict setObject:(self.highGrade      != nil ? self.highGrade : @"") forKey:@"highGrade"];
-    [dict setObject:(self.principalName  != nil ? self.principalName : @"") forKey:@"principalName"];
-    [dict setObject:(self.principalEmail != nil ? self.principalEmail : @"") forKey:@"principalEmail"];
-    [dict setObject:(self.name           != nil ? self.name : @"") forKey:@"name"];
-    [dict setObject:(self.address        != nil ? self.address : @"") forKey:@"address"];
-    [dict setObject:(self.city           != nil ? self.city : @"") forKey:@"city"];
-    [dict setObject:(self.state          != nil ? self.state : @"") forKey:@"state"];
-    [dict setObject:(self.zip            != nil ? self.zip : @"") forKey:@"zip"];
-    [dict setObject:(self.phone          != nil ? self.phone : @"") forKey:@"phone"];
-    return [dict description];
-}
-- (NSString*)url {
-    return [NSString stringWithFormat:@"/schools/%@", self.guid];
-}
-@end
-
