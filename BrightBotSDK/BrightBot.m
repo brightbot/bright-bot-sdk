@@ -585,6 +585,55 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     
 }
 
+- (void)modifyFileContents:(NSString*)content_id file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error {
+    [self modifyFileContents:content_id data:nil file:the_file success:success error:error];
+}
+- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data success:(void (^)(id data))success error:(void (^)(NSError* error))error {
+    [self modifyFileContents:content_id data:content_data file:nil success:success error:error];
+}
+
+- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error {
+    
+    // Transform the passed in content to our internal JSON format
+    NSString *transformedContent = @"";
+    if ( content_id != nil ) {
+        transformedContent = [NSString stringWithFormat:@"{\"item_meta\":\"%@\"}", content_data];
+    }
+    
+    NSMutableDictionary *file_contents = [[NSMutableDictionary alloc] init];
+    if ( the_file != nil ) {
+        file_contents = [NSMutableDictionary
+                         dictionaryWithDictionary:@{
+                         @"content" : the_file}];
+    }
+    
+    NSString* path = [NSString stringWithFormat:@"/content/%@", content_id];
+    
+    [self sendFile:path
+            method:@"PUT"
+              data:transformedContent
+     file_contents:file_contents
+           success:^(NSData *data) {
+               
+               success(data);
+               
+           } error:error ];
+
+}
+
+- (void)removeFileContents:(NSString*)content_id success:(void (^)(void))success error:(void (^)(NSError* error))error {
+    
+    NSString* path = [NSString stringWithFormat:@"/content/%@", content_id];
+    
+    [self sendData:path method:@"DELETE"
+              data:nil
+           success:^(NSData *data) {
+               
+               // No data comes back from DELETE requests
+               success();
+               
+           } error:error ];
+}
 
 @end
 

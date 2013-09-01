@@ -278,4 +278,28 @@ NSArray *our_students;
     }
     
 }
+
+- (IBAction)modifyContents:(id)sender {
+}
+
+- (IBAction)deleteContents:(id)sender {
+    if (our_students == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    } else {
+        // We're good, we have students
+        BBStudent *first_student = [our_students objectAtIndex:0];
+    
+        /*
+        [[BrightBot sharedInstance] removeFileContents:first_student.guid success:^() {
+            NSLog(@"contents deleted");
+        } error:^(NSError* error) {
+            NSLog(@"error deleting file contents %@", error);
+        }];
+         */
+        
+    }
+    
+}
 @end

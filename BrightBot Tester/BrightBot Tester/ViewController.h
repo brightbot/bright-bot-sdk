@@ -27,5 +27,7 @@ NSString *kBBClientSecret = @"ada83f3c6821adb804647d5ad77bb1dbac4d960d";
 - (IBAction)modifyStudent:(id)sender;
 - (IBAction)modifyStudentContent:(id)sender;
 - (IBAction)logProgress:(id)sender;
+- (IBAction)modifyContents:(id)sender;
+- (IBAction)deleteContents:(id)sender;
 
 @end

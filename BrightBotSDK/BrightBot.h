@@ -72,6 +72,11 @@
 - (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
 - (void)addFileContents:(NSString*)student_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)modifyFileContents:(NSString*)content_id file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+
+- (void)removeFileContents:(NSString*)content_id success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)signOut;
 
