@@ -466,7 +466,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 }
 
 - (void)modifyStudent:(NSDictionary*)the_student
-              success:(void (^)(void))success
+              success:(void (^)(id data))success
                 error:(void (^)(NSError* error))error {
     
         
@@ -502,7 +502,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
                success:^(NSData *data) {
                    
                    // Nothing comes back from PUT requests
-                   success();
+                   success(data);
                    
                } error:error ];
     } else {
@@ -513,7 +513,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
                success:^(NSData *data) {
                    
                    // Nothing comes back from PUT requests
-                   success();
+                   success(data);
                    
                } error:error ];
         

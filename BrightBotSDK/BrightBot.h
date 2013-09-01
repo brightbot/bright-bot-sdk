@@ -68,7 +68,7 @@
 - (void)logProgress:(NSString*)student_id time_spent:(NSNumber*)time_spent data:(NSArray*)progress_items success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
 - (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-- (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
 - (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
 - (void)addFileContents:(NSString*)student_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
