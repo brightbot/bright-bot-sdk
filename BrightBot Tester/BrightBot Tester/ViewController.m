@@ -16,6 +16,7 @@
 @implementation ViewController
 
 NSArray *our_students;
+NSArray *our_contents;
 
 - (void)viewDidLoad
 {
@@ -128,6 +129,7 @@ NSArray *our_students;
             for (BBFileContent* fileContent in fileContents) {
                 NSLog(@"File Content %@:%@", fileContent.guid, fileContent.metadata);
             }
+            our_contents = fileContents;
         } error:^(NSError* error) {
             NSLog(@"error retrieving file contents %@", error);
         }];
@@ -203,7 +205,7 @@ NSArray *our_students;
           };
                 
         [[BrightBot sharedInstance] modifyStudent:studentData
-            success:^(void) {
+            success:^(id data) {
               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
               [alert show];
               [alert release];
@@ -236,7 +238,7 @@ NSArray *our_students;
                                       };
         
         [[BrightBot sharedInstance] modifyStudent:studentData
-                                          success:^(void) {
+                                          success:^(id data) {
                                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                               [alert show];
                                               [alert release];
@@ -280,26 +282,62 @@ NSArray *our_students;
 }
 
 - (IBAction)modifyContents:(id)sender {
-}
-
-- (IBAction)deleteContents:(id)sender {
-    if (our_students == nil) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    if (our_contents == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve file contents first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         [alert release];
     } else {
-        // We're good, we have students
-        BBStudent *first_student = [our_students objectAtIndex:0];
-    
-        /*
-        [[BrightBot sharedInstance] removeFileContents:first_student.guid success:^() {
-            NSLog(@"contents deleted");
-        } error:^(NSError* error) {
-            NSLog(@"error deleting file contents %@", error);
-        }];
-         */
+        BBFileContent *first_content = [our_contents objectAtIndex:0];
+        
+        NSString* the_content = [NSString stringWithFormat:@"{'a':'2'}"];
+        
+        [[BrightBot sharedInstance] modifyFileContents:first_content.guid
+                                                  data:the_content
+                                               success:^(id data) {
+                                                   UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                   [alert show];
+                                                   [alert release];
+                                               }
+                                                 error:^(NSError* error) {
+                                                     NSLog(@"error removing file content %@", error);
+                                                 }];
+        
         
     }
+    
+}
+
+- (IBAction)deleteContents:(id)sender {
+    // We're good, we have file contents
+    
+    if (our_contents == nil) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve file contents first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    } else {
+        BBFileContent *first_content = [our_contents objectAtIndex:0];
+        
+        [[BrightBot sharedInstance] removeFileContents:first_content.guid
+                                          success:^(void) {
+                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was removed." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                              [alert show];
+                                              [alert release];
+                                          }
+                                            error:^(NSError* error) {
+                                                NSLog(@"error removing file content %@", error);
+                                            }];
+
+        
+    }
+
+    /*
+    [[BrightBot sharedInstance] removeFileContents:first_student.guid success:^() {
+        NSLog(@"contents deleted");
+    } error:^(NSError* error) {
+        NSLog(@"error deleting file contents %@", error);
+    }];
+     */
+    
     
 }
 @end
