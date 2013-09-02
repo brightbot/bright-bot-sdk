@@ -187,9 +187,6 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 
 - (NSMutableURLRequest*)setupRequest:(NSString*)path {
     
-    // Before every request save state in keychain... for now.
-    [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
-                                               authentication:self.auth];
     
     NSString* urlString          = [[NSString alloc] initWithFormat:@"%@/%@%@", kBrightBotAPIBase, kBrightBotAPIVersion, path];
     NSURL* url                   = [NSURL URLWithString:urlString];
@@ -209,6 +206,11 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     [self.auth authorizeRequest:request
               completionHandler:^(NSError *error) {
                   if (error == nil) {
+                      // every request could introduce a new refresh token, since the GTM library
+                      // doesn't save it properly internally, we're working around it here.
+                      [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                                                                 authentication:self.auth];
+                      
                       // the request has been authorized
                       
                       [request setHTTPMethod:method];
@@ -260,6 +262,11 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     [self.auth authorizeRequest:request
               completionHandler:^(NSError *error) {
                   if (error == nil) {
+                      // every request could introduce a new refresh token, since the GTM library
+                      // doesn't save it properly internally, we're working around it here.
+                      [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                                                                 authentication:self.auth];
+                      
                       // We're going to build this form request ourselves.
                       
                       // the request has been authorized
@@ -329,6 +336,11 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     [self.auth authorizeRequest:request
          completionHandler:^(NSError *error) {
              if (error == nil) {
+                 // every request could introduce a new refresh token, since the GTM library
+                 // doesn't save it properly internally, we're working around it here.
+                 [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                                                            authentication:self.auth];
+                 
                  // the request has been authorized
                  
                 [NSURLConnection sendAsynchronousRequest:request
