@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 BrightBot. All rights reserved.
 //
 #define kAppID @"com.brightbot.test_harness"
-NSString *kBBClientID = @"c928441e497c5db3e199557fc4d6c056a87eac53";
-NSString *kBBClientSecret = @"ada83f3c6821adb804647d5ad77bb1dbac4d960d";
+NSString *kBBClientID = @"71325ee4154e6102f8ba56e4ddc9aab51ef4e804";
+NSString *kBBClientSecret = @"a1739be129859d6253a8ea38282e2843010d80ff";
 
 #import <UIKit/UIKit.h>
 #import "BrightBot.h"

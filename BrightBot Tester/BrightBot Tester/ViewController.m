@@ -127,7 +127,7 @@ NSArray *our_contents;
         
         [[BrightBot sharedInstance] getFileContents:first_student.guid success:^(NSArray* fileContents) {
             for (BBFileContent* fileContent in fileContents) {
-                NSLog(@"File Content %@:%@", fileContent.guid, fileContent.metadata);
+                NSLog(@"File Content %@:%@", fileContent.path, fileContent.metadata);
             }
             our_contents = fileContents;
         } error:^(NSError* error) {
@@ -291,8 +291,14 @@ NSArray *our_contents;
         
         NSString* the_content = [NSString stringWithFormat:@"{'a':'2'}"];
         
+        NSString* filePath = [[NSBundle mainBundle] pathForResource:@"example_file2"
+                                                             ofType:@"zip" inDirectory:@"data"];
+        NSData* the_file = [[NSFileManager defaultManager] contentsAtPath:filePath];
+
+        
         [[BrightBot sharedInstance] modifyFileContents:first_content.guid
                                                   data:the_content
+                                                  file:the_file
                                                success:^(id data) {
                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                                    [alert show];
