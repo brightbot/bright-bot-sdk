@@ -135,6 +135,16 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 
 -(void)signOut {
     
+    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    
+    NSArray *allCookies = [cookies cookies];
+    
+    for(NSHTTPCookie *cookie in allCookies) {
+        if([[cookie domain] rangeOfString:@"brightbot"].location != NSNotFound) {
+            [cookies deleteCookie:cookie];
+        }
+    }
+    
     [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
     self.auth = nil;
     
@@ -158,8 +168,12 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
                                                                           delegate:self
                                                                   finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
     
+    
     UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
     [rootVC presentViewController:authController animated:YES completion:nil];
+    
+    /*UIView *myView = [[[NSBundle mainBundle] loadNibNamed:@"SignIn" owner:self options:nil] lastObject];
+    [authController.view addSubview:myView];*/
     
     authFinish = [success copy];
 }
