@@ -19,7 +19,7 @@
 
 // Instance vars
 void (^authFinish)();
-GTMOAuth2ViewControllerTouch *authController;
+BrightBot *authController;
 
 @synthesize auth = mAuth;
 @synthesize BBClientID = mBBClientID;
@@ -30,6 +30,15 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 
 static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 - (NSString*) fileUrl { return theFileUrl; }
+
+- (IBAction)closeAuth:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
++ (NSString *)authNibName {
+    // subclasses may override this to specify a custom nib name
+    return @"bb_GTMOAuth2ViewTouch";
+}
 
 /*
  Authentication and Instantiation Methods
@@ -57,7 +66,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 }
 
 // The auth finish selector
-- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
+- (void)viewController:(BrightBot *)viewController
       finishedWithAuth:(GTMOAuth2Authentication *)auth
                  error:(NSError *)error {
     
@@ -76,7 +85,8 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
         self.auth = nil;
         
         // Close the auth controller even if failed.
-        [authController dismissViewControllerAnimated:NO completion:nil];
+        
+        [authController dismissViewControllerAnimated:YES completion:nil];
     } else {
         // Sign-in succeeded
         
@@ -102,7 +112,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     if (auth) {
         
         // Load from Keychain
-        [GTMOAuth2ViewControllerTouch authorizeFromKeychainForName:kKeychainItemName
+        [BrightBot authorizeFromKeychainForName:kKeychainItemName
                                                     authentication:auth
                                                              error:NULL];
     }
@@ -145,7 +155,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
         }
     }
     
-    [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
+    [BrightBot removeAuthFromKeychainForName:kKeychainItemName];
     self.auth = nil;
     
 }
@@ -162,18 +172,17 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     NSURL *authURL = [NSURL URLWithString:urlString];
     
     // Display the authentication view
-    authController = [[[GTMOAuth2ViewControllerTouch alloc] initWithAuthentication:auth
-                                                                  authorizationURL:authURL
-                                                                  keychainItemName:kKeychainItemName
-                                                                          delegate:self
-                                                                  finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
+    
+    // Setup the custom view    
+    authController = [[[BrightBot alloc] initWithAuthentication:auth
+                                  authorizationURL:authURL
+                                  keychainItemName:kKeychainItemName
+                                          delegate:self
+                                  finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
     
     
     UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
     [rootVC presentViewController:authController animated:YES completion:nil];
-    
-    /*UIView *myView = [[[NSBundle mainBundle] loadNibNamed:@"SignIn" owner:self options:nil] lastObject];
-    [authController.view addSubview:myView];*/
     
     authFinish = [success copy];
 }
@@ -222,7 +231,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
                   if (error == nil) {
                       // every request could introduce a new refresh token, since the GTM library
                       // doesn't save it properly internally, we're working around it here.
-                      [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                      [BrightBot saveParamsToKeychainForName:kKeychainItemName
                                                                  authentication:self.auth];
                       
                       // the request has been authorized
@@ -278,7 +287,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
                   if (error == nil) {
                       // every request could introduce a new refresh token, since the GTM library
                       // doesn't save it properly internally, we're working around it here.
-                      [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                      [BrightBot saveParamsToKeychainForName:kKeychainItemName
                                                                  authentication:self.auth];
                       
                       // We're going to build this form request ourselves.
@@ -352,7 +361,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
              if (error == nil) {
                  // every request could introduce a new refresh token, since the GTM library
                  // doesn't save it properly internally, we're working around it here.
-                 [GTMOAuth2ViewControllerTouch saveParamsToKeychainForName:kKeychainItemName
+                 [BrightBot saveParamsToKeychainForName:kKeychainItemName
                                                             authentication:self.auth];
                  
                  // the request has been authorized
@@ -661,6 +670,10 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
            } error:error ];
 }
 
+- (void)dealloc {
+    [closeButton release];
+    [super dealloc];
+}
 @end
 
 @implementation BBFileContent

@@ -6,6 +6,7 @@
 //
 
 #import "GTMOAuth2Authentication.h"
+#import "GTMOAuth2ViewControllerTouch.h"
 
 //#define kBrightBotAPIBase @"http://api.brightbot-local.co:10080" //:10080"
 #define kBrightBotAPIBase @"https://api.brightbot.co"
@@ -49,11 +50,12 @@
 - (NSString*)toJSON;
 @end
 
-@interface BrightBot : NSObject {
+@interface BrightBot : GTMOAuth2ViewControllerTouch {
     GTMOAuth2Authentication *mAuth;
     NSString *mBBClientID;
     NSString *mBBClientSecret;
     NSString *fileUrl;
+    IBOutlet UIButton *closeButton;
 }
 
 @property (nonatomic, retain) GTMOAuth2Authentication *auth;
@@ -61,6 +63,9 @@
 @property (nonatomic, retain) NSString *BBClientSecret;
 
 - (NSString*) fileUrl;
+
+- (IBAction)closeAuth:(id)sender;
++ (NSString *)authNibName;
 
 + (BrightBot *)sharedInstance;
 - (BOOL)authenticated;
