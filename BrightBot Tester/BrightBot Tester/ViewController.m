@@ -42,8 +42,6 @@ NSArray *our_contents;
 }
 
 - (void)dealloc {
-    [_loginButton release];
-    [super dealloc];
 }
 
 - (IBAction)addStudent:(id)sender {
@@ -56,7 +54,6 @@ NSArray *our_contents;
     success:^(id data) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     }
     error:^(NSError* error) {
         NSLog(@"error retrieving students %@", error);
@@ -78,7 +75,6 @@ NSArray *our_contents;
         success:^(id data) {
            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
            [alert show];
-           [alert release];
         }
          error:^(NSError* error) {
              NSLog(@"error retrieving students %@", error);
@@ -102,7 +98,6 @@ NSArray *our_contents;
              // Any finalization tasks
              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Logged in!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
              [alert show];
-             [alert release];
              [sender setTitle:@"Log out" forState:UIControlStateNormal];
          }
            error:^(NSError *error) {
@@ -120,7 +115,6 @@ NSArray *our_contents;
     if (our_students == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
@@ -141,7 +135,6 @@ NSArray *our_contents;
     if (our_students == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
@@ -157,7 +150,6 @@ NSArray *our_contents;
             success:^(id data) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Content was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
-                [alert release];
             }
             error:^(NSError* error) {
               NSLog(@"error adding content %@", error);
@@ -169,7 +161,6 @@ NSArray *our_contents;
     if (our_students == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
@@ -182,7 +173,6 @@ NSArray *our_contents;
         success:^(void) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was removed." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
-            [alert release];
         }
           error:^(NSError* error) {
               NSLog(@"error removing student %@", error);
@@ -194,7 +184,6 @@ NSArray *our_contents;
     if (our_students == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
@@ -208,7 +197,6 @@ NSArray *our_contents;
             success:^(id data) {
               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
               [alert show];
-              [alert release];
             }
             error:^(NSError* error) {
                 NSLog(@"error removing student %@", error);
@@ -222,7 +210,6 @@ NSArray *our_contents;
     if (our_students == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
@@ -241,7 +228,6 @@ NSArray *our_contents;
                                           success:^(id data) {
                                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                               [alert show];
-                                              [alert release];
                                           }
                                             error:^(NSError* error) {
                                                 NSLog(@"error removing student %@", error);
@@ -254,7 +240,6 @@ NSArray *our_contents;
     if (our_students == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve students first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
@@ -272,7 +257,6 @@ NSArray *our_contents;
                                         success:^(void) {
                                           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Progress was logged." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                           [alert show];
-                                          [alert release];
                                         }
                                           error:^(NSError* error) {
                                             NSLog(@"error removing student %@", error);
@@ -285,7 +269,6 @@ NSArray *our_contents;
     if (our_contents == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve file contents first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         BBFileContent *first_content = [our_contents objectAtIndex:0];
         
@@ -302,7 +285,6 @@ NSArray *our_contents;
                                                success:^(id data) {
                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                                    [alert show];
-                                                   [alert release];
                                                }
                                                  error:^(NSError* error) {
                                                      NSLog(@"error removing file content %@", error);
@@ -319,7 +301,6 @@ NSArray *our_contents;
     if (our_contents == nil) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please retrieve file contents first!." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-        [alert release];
     } else {
         BBFileContent *first_content = [our_contents objectAtIndex:0];
         
@@ -327,7 +308,6 @@ NSArray *our_contents;
                                           success:^(void) {
                                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was removed." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                               [alert show];
-                                              [alert release];
                                           }
                                             error:^(NSError* error) {
                                                 NSLog(@"error removing file content %@", error);

@@ -77,8 +77,8 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
         NSData *responseData = [[error userInfo] objectForKey:@"data"]; // kGTMHTTPFetcherStatusDataKey
         if ([responseData length] > 0) {
             // show the body of the server's authentication failure response
-            NSString *str = [[[NSString alloc] initWithData:responseData
-                                                   encoding:NSUTF8StringEncoding] autorelease];
+            NSString *str = [[NSString alloc] initWithData:responseData
+                                                   encoding:NSUTF8StringEncoding];
             NSLog(@"%@", str);
         }
         
@@ -174,11 +174,11 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
     // Display the authentication view
     
     // Setup the custom view    
-    authController = [[[BrightBot alloc] initWithAuthentication:auth
+    authController = [[BrightBot alloc] initWithAuthentication:auth
                                   authorizationURL:authURL
                                   keychainItemName:kKeychainItemName
                                           delegate:self
-                                  finishedSelector:@selector(viewController:finishedWithAuth:error:)] autorelease];
+                                  finishedSelector:@selector(viewController:finishedWithAuth:error:)];
     
     
     UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
@@ -671,8 +671,7 @@ static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
 }
 
 - (void)dealloc {
-    [closeButton release];
-    [super dealloc];
+
 }
 @end
 
