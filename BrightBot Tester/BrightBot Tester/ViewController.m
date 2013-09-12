@@ -49,8 +49,9 @@ NSArray *our_contents;
     NSDictionary *studentData = @{
         @"name" : @"Zach",
     };
+    BBStudent* bbStudent = [[BBStudent alloc] initWithResponseDictionary:studentData];
     
-    [[BrightBot sharedInstance] addStudent:studentData
+    [[BrightBot sharedInstance] addStudent:bbStudent
     success:^(id data) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
@@ -65,13 +66,16 @@ NSArray *our_contents;
     NSString* filePath = [[NSBundle mainBundle] pathForResource:@"example_profile_pic"
                                                          ofType:@"png" inDirectory:@"data"];
     NSData* the_profile_picture = [[NSFileManager defaultManager] contentsAtPath:filePath];
-
+    
+   
     NSDictionary *studentData = @{
         @"name" : @"Zach",
-        @"profile_picture" : the_profile_picture
+        @"profile_picture_data" : the_profile_picture
     };
+    
+    BBStudent* bbStudent = [[BBStudent alloc] initWithResponseDictionary:studentData];
 
-    [[BrightBot sharedInstance] addStudent:studentData
+    [[BrightBot sharedInstance] addStudent:bbStudent
         success:^(id data) {
            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
            [alert show];
@@ -119,7 +123,7 @@ NSArray *our_contents;
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
         
-        [[BrightBot sharedInstance] getFileContents:first_student.guid success:^(NSArray* fileContents) {
+        [[BrightBot sharedInstance] getFileContents:first_student success:^(NSArray* fileContents) {
             for (BBFileContent* fileContent in fileContents) {
                 NSLog(@"File Content %@:%@", fileContent.path, fileContent.metadata);
             }
@@ -139,14 +143,18 @@ NSArray *our_contents;
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
         
-        NSString* the_content = [NSString stringWithFormat:@"{'a':'1'}"];
-        
         NSString* filePath = [[NSBundle mainBundle] pathForResource:@"example_file"
                                                              ofType:@"zip" inDirectory:@"data"];
         NSData* the_file = [[NSFileManager defaultManager] contentsAtPath:filePath];
-
         
-        [[BrightBot sharedInstance] addFileContents:first_student.guid data:the_content file:the_file
+        NSDictionary *contentData = @{
+                                      @"metadata" : [NSString stringWithFormat:@"{'a':'1'}"],
+                                      @"content_data" : the_file
+                                      };
+
+        BBFileContent* bbData = [[BBFileContent alloc] initWithResponseDictionary:contentData];
+        
+        [[BrightBot sharedInstance] addFileContents:first_student content:bbData
             success:^(id data) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Content was added." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                 [alert show];
@@ -165,11 +173,7 @@ NSArray *our_contents;
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
         
-        NSDictionary *studentData = @{
-            @"id" : first_student.guid,
-        };
-        
-        [[BrightBot sharedInstance] removeStudent:studentData
+        [[BrightBot sharedInstance] removeStudent:first_student
         success:^(void) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was removed." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
@@ -188,12 +192,9 @@ NSArray *our_contents;
         // We're good, we have students
         BBStudent *first_student = [our_students objectAtIndex:0];
         
-        NSDictionary *studentData = @{
-          @"id" : first_student.guid,
-          @"name" : @"NewName"
-          };
+        first_student.name = @"NewName";
                 
-        [[BrightBot sharedInstance] modifyStudent:studentData
+        [[BrightBot sharedInstance] modifyStudent:first_student
             success:^(id data) {
               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
               [alert show];
@@ -218,13 +219,10 @@ NSArray *our_contents;
                                                              ofType:@"png" inDirectory:@"data"];
         NSData* the_profile_picture = [[NSFileManager defaultManager] contentsAtPath:filePath];
         
-        NSDictionary *studentData = @{
-                                      @"id" : first_student.guid,
-                                      @"name" : @"NewName",
-                                      @"profile_picture" : the_profile_picture
-                                      };
+        first_student.name = @"NewName";
+        first_student.profile_picture_data =the_profile_picture;
         
-        [[BrightBot sharedInstance] modifyStudent:studentData
+        [[BrightBot sharedInstance] modifyStudent:first_student
                                           success:^(id data) {
                                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Student was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                               [alert show];
@@ -272,16 +270,14 @@ NSArray *our_contents;
     } else {
         BBFileContent *first_content = [our_contents objectAtIndex:0];
         
-        NSString* the_content = [NSString stringWithFormat:@"{'a':'2'}"];
+        first_content.metadata = [NSString stringWithFormat:@"{'a':'2'}"];
         
         NSString* filePath = [[NSBundle mainBundle] pathForResource:@"example_file2"
                                                              ofType:@"zip" inDirectory:@"data"];
         NSData* the_file = [[NSFileManager defaultManager] contentsAtPath:filePath];
-
+        first_content.content_data = the_file;
         
-        [[BrightBot sharedInstance] modifyFileContents:first_content.guid
-                                                  data:the_content
-                                                  file:the_file
+        [[BrightBot sharedInstance] modifyFileContents:first_content
                                                success:^(id data) {
                                                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was modified." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                                    [alert show];
@@ -304,7 +300,7 @@ NSArray *our_contents;
     } else {
         BBFileContent *first_content = [our_contents objectAtIndex:0];
         
-        [[BrightBot sharedInstance] removeFileContents:first_content.guid
+        [[BrightBot sharedInstance] removeFileContents:first_content
                                           success:^(void) {
                                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"File Content was removed." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
                                               [alert show];

@@ -8,17 +8,19 @@
 #import "GTMOAuth2Authentication.h"
 #import "GTMOAuth2ViewControllerTouch.h"
 
-//#define kBrightBotAPIBase @"http://api.brightbot-local.co:10080" //:10080"
-#define kBrightBotAPIBase @"https://api.brightbot.co"
+#define kBrightBotAPIBase @"http://api.brightbot-local.co:10080" //:10080"
+//#define kBrightBotAPIBase @"https://api.brightbot.co"
 #define kBrightBotAPIVersion @"v1"
 
 @interface BBFileContent : NSObject
 @property (strong, nonatomic) NSString* guid;
 @property (strong, nonatomic) NSString* metadata;
 @property (strong, nonatomic) NSString* path;
+@property (strong, nonatomic) NSData* content_data;
 @property (strong, nonatomic) NSNumber* created;
 @property (strong, nonatomic) NSNumber* updated;
 - (id)initWithResponseDictionary:(NSDictionary*)content;
+- (NSMutableDictionary*)toDictionary;
 @end
 
 @interface BBStudent : NSObject
@@ -27,20 +29,9 @@
 @property (strong, nonatomic) NSNumber* created;
 @property (strong, nonatomic) NSNumber* updated;
 @property (strong, nonatomic) NSString* profile_picture;
+@property (strong, nonatomic) NSData* profile_picture_data;
 - (id)initWithResponseDictionary:(NSDictionary*)student;
-@end
-
-@interface BBTeacher : NSObject
-@property (strong, nonatomic) NSString* guid;
-@property (strong, nonatomic) NSString* lastModified;
-@property (strong, nonatomic) NSString* sisID;
-@property (strong, nonatomic) NSString* email;
-@property (strong, nonatomic) NSString* firstName;
-@property (strong, nonatomic) NSString* middleName;
-@property (strong, nonatomic) NSString* lastName;
-@property (strong, nonatomic) NSString* title;
-- (id)initWithResponseDictionary:(NSDictionary*)teacher;
-- (NSString*)description;
+- (NSMutableDictionary*)toDictionary;
 @end
 
 @interface BBActivityProgress : NSObject
@@ -69,16 +60,13 @@
 - (void)configure:(NSString *)client_id client_secret:(NSString *)client_secret;
 - (void)logProgress:(NSString*)student_id time_spent:(NSNumber*)time_spent data:(NSArray*)progress_items success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)getStudents:(void (^)(NSArray* students))success error:(void (^)(NSError *error))error;
-- (void)addStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-- (void)modifyStudent:(NSDictionary*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-- (void)removeStudent:(NSDictionary*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
-- (void)getFileContents:(NSString*)student_id success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
-- (void)addFileContents:(NSString*)student_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-- (void)modifyFileContents:(NSString*)content_id file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error;
-
-- (void)removeFileContents:(NSString*)content_id success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)addStudent:(BBStudent*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)modifyStudent:(BBStudent*)the_student success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)removeStudent:(BBStudent*)the_student success:(void (^)(void))success error:(void (^)(NSError* error))error;
+- (void)getFileContents:(BBStudent*)the_student success:(void (^)(NSArray* fileContents))success error:(void (^)(NSError* error))error;
+- (void)addFileContents:(BBStudent*)the_student content:(BBFileContent*)content_data success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)modifyFileContents:(BBFileContent*)content success:(void (^)(id data))success error:(void (^)(NSError* error))error;
+- (void)removeFileContents:(BBFileContent*)content success:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error;
 - (void)signOut;
 

@@ -53,12 +53,23 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     // loaded, so it need not be for any actual web page.
     NSString *redirectURI = @"http://www.brightbot.com/OAuthCallback";
     
+    BOOL shouldAuthorizeAllRequests;
+    // If this is running to the local instance, SSL isn't used.
+    if ([kBrightBotAPIBase rangeOfString:@"local"].location == NSNotFound) {
+        shouldAuthorizeAllRequests = NO;
+    } else {
+        shouldAuthorizeAllRequests = YES;
+    }
+    
     GTMOAuth2Authentication *auth;
     auth = [GTMOAuth2Authentication authenticationWithServiceProvider:kServiceProviderName
                                                              tokenURL:tokenURL
                                                           redirectURI:redirectURI
                                                              clientID:self.BBClientID
                                                          clientSecret:self.BBClientSecret];
+    
+    auth.shouldAuthorizeAllRequests = shouldAuthorizeAllRequests;
+    
     return auth;
 }
 
@@ -445,24 +456,17 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 }
 
 
-- (void)addStudent:(NSDictionary*)the_student
+- (void)addStudent:(BBStudent*)the_student
            success:(void (^)(id data))success
              error:(void (^)(NSError* error))error {
     
     // Check to see if the_student has NSData (files) in the dictionary
-    NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
+    NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:[the_student toDictionary]];
     NSMutableDictionary *student_files = [NSMutableDictionary dictionaryWithDictionary:@{}];
     
-    for(id key in the_student) {
-        id this_value = [the_student objectForKey:key];
-        
-        if ([this_value isKindOfClass:[NSData class]]) {
-            
-            // Remove this object from the student textual data and move to a new object
-            [student_dictionary removeObjectForKey:key];
-            [student_files setObject:this_value forKey:key];
-            
-        }
+    if (the_student.profile_picture_data != nil) {
+        [student_files setObject:the_student.profile_picture_data forKey:@"profile_picture"];
+        the_student.profile_picture_data = nil;
     }
     
     NSString* path = [NSString stringWithFormat:@"/student"];
@@ -497,28 +501,21 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     
 }
 
-- (void)modifyStudent:(NSDictionary*)the_student
+- (void)modifyStudent:(BBStudent*)the_student
               success:(void (^)(id data))success
                 error:(void (^)(NSError* error))error {
     
-        
+    
     // Check to see if the_student has NSData (files) in the dictionary
-    NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:the_student];
+    NSMutableDictionary *student_dictionary = [NSMutableDictionary dictionaryWithDictionary:[the_student toDictionary]];
     NSMutableDictionary *student_files = [NSMutableDictionary dictionaryWithDictionary:@{}];
     
-    for(id key in the_student) {
-        id this_value = [the_student objectForKey:key];
-        
-        if ([this_value isKindOfClass:[NSData class]]) {
-            
-            // Remove this object from the student textual data and move to a new object
-            [student_dictionary removeObjectForKey:key];
-            [student_files setObject:this_value forKey:key];
-            
-        }
+    if (the_student.profile_picture_data != nil) {
+        [student_files setObject:the_student.profile_picture_data forKey:@"profile_picture"];
+        the_student.profile_picture_data = nil;
     }
-    
-    NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
+
+    NSString* path = [NSString stringWithFormat:@"/student/%@", the_student.guid];
     
     NSError *JSONerror;
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:student_dictionary
@@ -553,11 +550,11 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     
 }
 
-- (void)removeStudent:(NSDictionary*)the_student
+- (void)removeStudent:(BBStudent*)the_student
               success:(void (^)(void))success
                 error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/student/%@", the_student[@"id"]];
+    NSString* path = [NSString stringWithFormat:@"/student/%@", the_student.guid];
     
     [self sendData:path method:@"DELETE"
               data:nil
@@ -570,11 +567,11 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     
 }
 
-- (void)getFileContents:(NSString*)student_id
+- (void)getFileContents:(BBStudent*)the_student
                 success:(void (^)(NSArray* fileContents))success
                   error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
+    NSString* path = [NSString stringWithFormat:@"/content/%@", the_student.guid];
     
     [self getJSON:path
           success:^(NSDictionary* json) {
@@ -591,20 +588,19 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     
 }
 
-- (void)addFileContents:(NSString*)student_id
-                   data:(NSString*)content_data
-                   file:the_file
+- (void)addFileContents:(BBStudent*)the_student
+                   content:(BBFileContent*)content_data
                 success:(void (^)(id data))success
                   error:(void (^)(NSError* error))error {
     
     // Transform the passed in content to our internal JSON format
-    NSString *transformedContent = [NSString stringWithFormat:@"{\"item_meta\":\"%@\"}", content_data];
+    NSString *transformedContent = [NSString stringWithFormat:@"{\"item_meta\":\"%@\"}", content_data.metadata];
     
-    NSString* path = [NSString stringWithFormat:@"/content/%@", student_id];
+    NSString* path = [NSString stringWithFormat:@"/content/%@", the_student.guid];
     
     NSMutableDictionary *file_contents = [NSMutableDictionary
                                  dictionaryWithDictionary:@{
-                                 @"content" : the_file}];
+                                 @"content" : content_data.content_data}];
     [self sendFile:path
             method:@"POST"
               data:transformedContent
@@ -617,29 +613,22 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     
 }
 
-- (void)modifyFileContents:(NSString*)content_id file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error {
-    [self modifyFileContents:content_id data:nil file:the_file success:success error:error];
-}
-- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data success:(void (^)(id data))success error:(void (^)(NSError* error))error {
-    [self modifyFileContents:content_id data:content_data file:nil success:success error:error];
-}
-
-- (void)modifyFileContents:(NSString*)content_id data:(NSString*)content_data file:the_file success:(void (^)(id data))success error:(void (^)(NSError* error))error {
+- (void)modifyFileContents:(BBFileContent*)content success:(void (^)(id data))success error:(void (^)(NSError* error))error {
     
     // Transform the passed in content to our internal JSON format
     NSString *transformedContent = @"";
-    if ( content_id != nil ) {
-        transformedContent = [NSString stringWithFormat:@"{\"item_meta\":\"%@\"}", content_data];
+    if ( content.metadata != nil ) {
+        transformedContent = [NSString stringWithFormat:@"{\"item_meta\":\"%@\"}", content.metadata];
     }
     
     NSMutableDictionary *file_contents = [[NSMutableDictionary alloc] init];
-    if ( the_file != nil ) {
+    if ( content.content_data != nil ) {
         file_contents = [NSMutableDictionary
                          dictionaryWithDictionary:@{
-                         @"content" : the_file}];
+                         @"content" : content.content_data}];
     }
     
-    NSString* path = [NSString stringWithFormat:@"/content/%@", content_id];
+    NSString* path = [NSString stringWithFormat:@"/content/%@", content.guid];
     
     [self sendFile:path
             method:@"PUT"
@@ -653,9 +642,9 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 
 }
 
-- (void)removeFileContents:(NSString*)content_id success:(void (^)(void))success error:(void (^)(NSError* error))error {
+- (void)removeFileContents:(BBFileContent*)content success:(void (^)(void))success error:(void (^)(NSError* error))error {
     
-    NSString* path = [NSString stringWithFormat:@"/content/%@", content_id];
+    NSString* path = [NSString stringWithFormat:@"/content/%@", content.guid];
     
     [self sendData:path method:@"DELETE"
               data:nil
@@ -673,31 +662,52 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
 @end
 
 @implementation BBFileContent
-@synthesize guid, metadata, path, created, updated;
+@synthesize guid, metadata, path, content_data, created, updated;
 - (id)initWithResponseDictionary:(NSDictionary *)file_content {
     if ((self = [super init])) {
         self.guid           = [file_content objectForKey:@"id"];
         self.metadata       = [file_content objectForKey:@"metadata"];
         self.path           = [file_content objectForKey:@"path"];
+        self.content_data   = [file_content objectForKey:@"content_data"];
         self.created        = [file_content objectForKey:@"created"];
         self.updated        = [file_content objectForKey:@"updated"];
     }
     return self;
 }
+- (NSMutableDictionary*)toDictionary {
+    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:(self.guid          != nil ? self.guid : @"") forKey:@"id"];
+    [dict setObject:(self.metadata      != nil ? self.metadata : @"") forKey:@"metadata"];
+    [dict setObject:(self.path          != nil ? self.path : @"") forKey:@"path"];
+    [dict setObject:(self.created       != nil ? self.created : @"") forKey:@"created"];
+    [dict setObject:(self.updated       != nil ? self.updated : @"") forKey:@"updated"];
+    return dict;
+}
 @end
  
 @implementation BBStudent
-@synthesize guid, name, profile_picture, created, updated;
+@synthesize guid, name, profile_picture, profile_picture_data, created, updated;
 - (id)initWithResponseDictionary:(NSDictionary *)student {
     if ((self = [super init])) {
         self.guid          = [student objectForKey:@"id"];
         self.name          = [student objectForKey:@"name"];
         self.profile_picture = [student objectForKey:@"profile_picture"];
+        self.profile_picture_data = [student objectForKey:@"profile_picture_data"];
         self.created        = [student objectForKey:@"created"];
         self.updated        = [student objectForKey:@"updated"];
     }
     return self;
 }
+- (NSMutableDictionary*)toDictionary {
+    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:(self.guid         != nil ? self.guid : @"") forKey:@"id"];
+    [dict setObject:(self.name         != nil ? self.name : @"") forKey:@"name"];
+    [dict setObject:(self.profile_picture != nil ? self.profile_picture : @"") forKey:@"profile_picture"];
+    [dict setObject:(self.created      != nil ? self.created : @"") forKey:@"created"];
+    [dict setObject:(self.updated      != nil ? self.updated : @"") forKey:@"updated"];
+    return dict;
+}
+
 @end
      
 @implementation BBActivityProgress
@@ -712,34 +722,5 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
     return jsonString;
-}
-@end
-
-@implementation BBTeacher
-@synthesize guid, lastModified, sisID, email, firstName, middleName, lastName, title;
-- (id)initWithResponseDictionary:(NSDictionary *)teacher {
-    if ((self = [super init])) {
-        self.guid         = [teacher objectForKey:@"id"];
-        self.lastModified = [teacher objectForKey:@"last_modified"];
-        self.sisID        = [teacher objectForKey:@"sis_id"];
-        self.email        = [teacher objectForKey:@"email"];
-        self.firstName    = [[teacher objectForKey:@"name"] objectForKey:@"first"];
-        self.middleName   = [[teacher objectForKey:@"name"] objectForKey:@"middle"];
-        self.lastName     = [[teacher objectForKey:@"name"] objectForKey:@"last"];
-        self.title        = [teacher objectForKey:@"title"];
-    }
-    return self;
-}
-- (NSString*)description {
-    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:(self.guid         != nil ? self.guid : @"") forKey:@"guid"];
-    [dict setObject:(self.lastModified != nil ? self.lastModified : @"") forKey:@"lastModified"];
-    [dict setObject:(self.sisID        != nil ? self.sisID : @"") forKey:@"sisID"];
-    [dict setObject:(self.email        != nil ? self.email : @"") forKey:@"email"];
-    [dict setObject:(self.firstName    != nil ? self.firstName : @"") forKey:@"firstName"];
-    [dict setObject:(self.middleName   != nil ? self.middleName : @"") forKey:@"middleName"];
-    [dict setObject:(self.lastName     != nil ? self.lastName : @"") forKey:@"lastName"];
-    [dict setObject:(self.title        != nil ? self.title : @"") forKey:@"title"];
-    return [dict description];
 }
 @end
