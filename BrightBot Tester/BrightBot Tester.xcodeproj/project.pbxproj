@@ -17,6 +17,8 @@
 		9A03902117C506D200A5B115 /* GTMHTTPFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A03901517C5026700A5B115 /* GTMHTTPFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		9A1C8D0D17A1B08F00B62D15 /* data in Resources */ = {isa = PBXBuildFile; fileRef = 9A1C8D0C17A1B08F00B62D15 /* data */; };
 		9A5F603517DA11B400FF8A41 /* bb_GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9A5F603417DA11B400FF8A41 /* bb_GTMOAuth2ViewTouch.xib */; };
+		9A6A6B5A17E14D4800341EFF /* btn_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A6A6B5817E14D4800341EFF /* btn_close.png */; };
+		9A6A6B5B17E14D4800341EFF /* btn_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A6A6B5917E14D4800341EFF /* btn_close@2x.png */; };
 		9AA5D0FC1796E53B0036B677 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FB1796E53B0036B677 /* UIKit.framework */; };
 		9AA5D0FE1796E53B0036B677 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FD1796E53B0036B677 /* Foundation.framework */; };
 		9AA5D1001796E53B0036B677 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA5D0FF1796E53B0036B677 /* CoreGraphics.framework */; };
@@ -62,6 +64,8 @@
 		9A03901E17C5029F00A5B115 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		9A1C8D0C17A1B08F00B62D15 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
 		9A5F603417DA11B400FF8A41 /* bb_GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = bb_GTMOAuth2ViewTouch.xib; path = ../../BrightBotSDK/bb_GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
+		9A6A6B5817E14D4800341EFF /* btn_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_close.png; sourceTree = "<group>"; };
+		9A6A6B5917E14D4800341EFF /* btn_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_close@2x.png"; sourceTree = "<group>"; };
 		9AA5D0F81796E53B0036B677 /* BrightBot Tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BrightBot Tester.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AA5D0FB1796E53B0036B677 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		9AA5D0FD1796E53B0036B677 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -115,6 +119,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9A6A6B5617E14D4800341EFF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9A6A6B5717E14D4800341EFF /* images */,
+			);
+			name = Resources;
+			path = ../../BrightBotSDK/Resources;
+			sourceTree = "<group>";
+		};
+		9A6A6B5717E14D4800341EFF /* images */ = {
+			isa = PBXGroup;
+			children = (
+				9A6A6B5817E14D4800341EFF /* btn_close.png */,
+				9A6A6B5917E14D4800341EFF /* btn_close@2x.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
 		9AA5D0EF1796E53B0036B677 = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +172,7 @@
 		9AA5D1011796E53B0036B677 /* BrightBot Tester */ = {
 			isa = PBXGroup;
 			children = (
+				9A6A6B5617E14D4800341EFF /* Resources */,
 				9A5F603417DA11B400FF8A41 /* bb_GTMOAuth2ViewTouch.xib */,
 				9A03901717C5028700A5B115 /* GTMOAuth2ViewControllerTouch.h */,
 				9A03901817C5028700A5B115 /* GTMOAuth2ViewControllerTouch.m */,
@@ -281,12 +304,14 @@
 				9AA5D1061796E53B0036B677 /* InfoPlist.strings in Resources */,
 				9AA5D10E1796E53B0036B677 /* Default.png in Resources */,
 				9AA5D1101796E53B0036B677 /* Default@2x.png in Resources */,
+				9A6A6B5A17E14D4800341EFF /* btn_close.png in Resources */,
 				9AA5D1121796E53B0036B677 /* Default-568h@2x.png in Resources */,
 				9AA5D1151796E53B0036B677 /* MainStoryboard_iPhone.storyboard in Resources */,
 				9AA5D1181796E53B0036B677 /* MainStoryboard_iPad.storyboard in Resources */,
 				9A1C8D0D17A1B08F00B62D15 /* data in Resources */,
 				9A03901B17C5028700A5B115 /* GTMOAuth2ViewTouch.xib in Resources */,
 				9A5F603517DA11B400FF8A41 /* bb_GTMOAuth2ViewTouch.xib in Resources */,
+				9A6A6B5B17E14D4800341EFF /* btn_close@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -54,15 +54,12 @@
     GTMOAuth2Authentication *mAuth;
     NSString *mBBClientID;
     NSString *mBBClientSecret;
-    NSString *fileUrl;
     IBOutlet UIButton *closeButton;
 }
 
 @property (nonatomic, retain) GTMOAuth2Authentication *auth;
 @property (nonatomic, retain) NSString *BBClientID;
 @property (nonatomic, retain) NSString *BBClientSecret;
-
-- (NSString*) fileUrl;
 
 - (IBAction)closeAuth:(id)sender;
 + (NSString *)authNibName;

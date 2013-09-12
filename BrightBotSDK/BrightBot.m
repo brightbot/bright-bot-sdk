@@ -28,9 +28,6 @@ BrightBot *authController;
 static NSString *const kKeychainItemName = @"BrightBot OAuth";
 static NSString *const kServiceProviderName = @"BrightBot Service";
 
-static NSString *theFileUrl = @"http://bright-bot-files.storage.googleapis.com";
-- (NSString*) fileUrl { return theFileUrl; }
-
 - (IBAction)closeAuth:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
