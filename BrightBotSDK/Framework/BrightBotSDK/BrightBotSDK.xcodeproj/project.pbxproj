@@ -73,6 +73,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9A1A516017E6ABD00075DCF2 /* bb_GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = bb_GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
 		9ADAD3ED17DB8A4E0075FE22 /* libBrightBotSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBrightBotSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ADAD3F017DB8A4E0075FE22 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9ADAD3F417DB8A4E0075FE22 /* BrightBotSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BrightBotSDK-Prefix.pch"; sourceTree = "<group>"; };
@@ -86,7 +87,6 @@
 		9ADAD40E17DB8A4E0075FE22 /* BrightBotSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BrightBotSDKTests.m; sourceTree = "<group>"; };
 		9ADAD41817DB8ACC0075FE22 /* BrightBot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrightBot.h; path = ../../../BrightBot.h; sourceTree = "<group>"; };
 		9ADAD41917DB8ACC0075FE22 /* BrightBot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrightBot.m; path = ../../../BrightBot.m; sourceTree = "<group>"; };
-		9ADAD41E17DB8F390075FE22 /* bb_GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = bb_GTMOAuth2ViewTouch.xib; path = ../../../bb_GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
 		9ADAD4CF17DB908A0075FE22 /* btn_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_close.png; sourceTree = "<group>"; };
 		9ADAD4D017DB908A0075FE22 /* btn_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_close@2x.png"; sourceTree = "<group>"; };
 		9ADAD4D117DB912C0075FE22 /* GTMOAuth2ViewControllerTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GTMOAuth2ViewControllerTouch.h; path = "../../../gtm-oauth2/Source/Touch/GTMOAuth2ViewControllerTouch.h"; sourceTree = "<group>"; };
@@ -163,7 +163,6 @@
 				9ADAD4D117DB912C0075FE22 /* GTMOAuth2ViewControllerTouch.h */,
 				9ADAD4D217DB912C0075FE22 /* GTMOAuth2ViewControllerTouch.m */,
 				9ADAD4CD17DB908A0075FE22 /* Resources */,
-				9ADAD41E17DB8F390075FE22 /* bb_GTMOAuth2ViewTouch.xib */,
 				9ADAD41817DB8ACC0075FE22 /* BrightBot.h */,
 				9ADAD41917DB8ACC0075FE22 /* BrightBot.m */,
 				9ADAD3F517DB8A4E0075FE22 /* BrightBotSDK.h */,
@@ -202,6 +201,7 @@
 		9ADAD4CD17DB908A0075FE22 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				9A1A516017E6ABD00075DCF2 /* bb_GTMOAuth2ViewTouch.xib */,
 				9ADAD4CE17DB908A0075FE22 /* images */,
 			);
 			name = Resources;
@@ -551,6 +551,7 @@
 				9ADAD41417DB8A4E0075FE22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9ADAD41517DB8A4E0075FE22 /* Build configuration list for PBXNativeTarget "BrightBotSDKTests" */ = {
 			isa = XCConfigurationList;
@@ -559,6 +560,7 @@
 				9ADAD41717DB8A4E0075FE22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9ADAD4E217DB944A0075FE22 /* Build configuration list for PBXAggregateTarget "Framework" */ = {
 			isa = XCConfigurationList;
@@ -567,6 +569,7 @@
 				9ADAD4E417DB944A0075FE22 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
