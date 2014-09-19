@@ -48,7 +48,7 @@ extern NSString *const kGTMOAuth2KeychainErrorDomain;
 
 typedef void (^GTMOAuth2ViewControllerCompletionHandler)(GTMOAuth2ViewControllerTouch *viewController, GTMOAuth2Authentication *auth, NSError *error);
 
-@interface GTMOAuth2ViewControllerTouch : UIViewController<UINavigationControllerDelegate, UIWebViewDelegate> {
+@interface GTMOAuth2ViewControllerTouch : UIViewController<UINavigationControllerDelegate, UIWebViewDelegate, NSURLConnectionDelegate> {
  @private
   UIButton *backButton_;
   UIButton *forwardButton_;
@@ -63,7 +63,8 @@ typedef void (^GTMOAuth2ViewControllerCompletionHandler)(GTMOAuth2ViewController
 
   // the page request to load when awakeFromNib occurs
   NSURLRequest *request_;
-
+    NSURLRequest *_FailedRequest;
+  
   // The user we're calling back
   //
   // The delegate is retained only until the callback is invoked
@@ -116,7 +117,7 @@ typedef void (^GTMOAuth2ViewControllerCompletionHandler)(GTMOAuth2ViewController
 
   // Set in a webView callback.
   BOOL hasDoneFinalRedirect_;
-
+    BOOL _Authenticated;
   // Set during the pop initiated by the sign-in object; otherwise,
   // viewWillDisappear indicates that some external change of the view
   // has stopped the sign-in.

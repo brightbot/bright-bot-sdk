@@ -47,12 +47,13 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     NSString* urlString = [[NSString alloc] initWithFormat:@"%@/oauth/token", kBrightBotAPIBase];
     NSURL *tokenURL = [NSURL URLWithString:urlString];
     
-    
     // We'll make up an arbitrary redirectURI.  The controller will watch for
     // the server to redirect the web view to this URI, but this URI will not be
     // loaded, so it need not be for any actual web page.
     NSString *redirectURI = @"http://www.brightbot.com/OAuthCallback";
-    
+//    NSString *redirectURI = @"https://api.brightbot.co/OAuthCallback";
+//    NSString *const kOOBString = @"urn:ietf:wg:oauth:2.0:oob";
+
     BOOL shouldAuthorizeAllRequests;
     // If this is running to the local instance, SSL isn't used.
     if ([kBrightBotAPIBase rangeOfString:@"local"].location == NSNotFound) {
@@ -189,9 +190,10 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
                                   finishedSelector:@selector(viewController:finishedWithAuth:error:)];
     
     
-    UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
+//    UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
+    UIViewController *rootVC = [[[UIApplication sharedApplication].delegate window] rootViewController];
     [rootVC presentViewController:authController animated:YES completion:nil];
-    
+
     authFinish = [success copy];
 }
 

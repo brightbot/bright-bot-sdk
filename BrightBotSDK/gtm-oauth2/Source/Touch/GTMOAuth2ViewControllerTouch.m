@@ -626,6 +626,50 @@ static Class gSignInClass = Nil;
   }
 }
 
+/** Authentication Request */
+-(void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge {
+    if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
+        NSURL* baseURL = [NSURL URLWithString:@"http://api.brightbot.co"];
+        NSLog(@"%@ : %@", challenge.protectionSpace.host, baseURL.host);
+        if ([challenge.protectionSpace.host isEqualToString:baseURL.host]) {
+            NSLog(@"trusting connection to host %@", challenge.protectionSpace.host);
+            [challenge.sender useCredential:[NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust] forAuthenticationChallenge:challenge];
+        } else
+            NSLog(@"Not trusting connection to host %@", challenge.protectionSpace.host);
+    }
+    [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)pResponse {
+    _Authenticated = YES;
+//    [connection cancel];
+    [self.webView loadRequest:_FailedRequest]; //call the loadRequest again after authenticated.
+//    hasDoneFinalRedirect_ = [signIn_ requestRedirectedToRequest:_FailedRequest];
+}
+
+-(BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:
+(NSURLProtectionSpace *)protectionSpace {
+    return [protectionSpace.authenticationMethod
+            isEqualToString:NSURLAuthenticationMethodServerTrust];
+}
+
+-(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:
+(NSURLAuthenticationChallenge *)challenge {
+    if (([challenge.protectionSpace.authenticationMethod
+          isEqualToString:NSURLAuthenticationMethodServerTrust])) {
+        NSLog(@"%@", challenge.protectionSpace.host);
+        if ([challenge.protectionSpace.host isEqualToString:@"api.brightbot.co"]) {
+            NSLog(@"Allowing bypass...");
+            NSURLCredential *credential = [NSURLCredential credentialForTrust:
+                                           challenge.protectionSpace.serverTrust];
+            [challenge.sender useCredential:credential
+                 forAuthenticationChallenge:challenge];
+        }
+    }
+    [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+}
+
+
 - (void)signIn:(GTMOAuth2SignIn *)signIn
   finishedWithAuth:(GTMOAuth2Authentication *)auth
              error:(NSError *)error {
@@ -763,14 +807,26 @@ static Class gSignInClass = Nil;
   shouldStartLoadWithRequest:(NSURLRequest *)request
               navigationType:(UIWebViewNavigationType)navigationType {
 
-  if (!hasDoneFinalRedirect_) {
+//    [NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[[request URL] host]];
+    
+    BOOL result = _Authenticated;
+    if (!_Authenticated) {
+        _FailedRequest = request;
+        [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    }
+//    return result;
+
+    else {
+        if (!hasDoneFinalRedirect_) {
     hasDoneFinalRedirect_ = [signIn_ requestRedirectedToRequest:request];
     if (hasDoneFinalRedirect_) {
       // signIn has told the view to close
-      return NO;
+        result = NO;
+        return result;
     }
   }
-  return YES;
+    }
+  return result;
 }
 
 - (void)updateUI {
