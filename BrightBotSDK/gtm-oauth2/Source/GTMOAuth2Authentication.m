@@ -722,12 +722,13 @@ finishedRefreshWithFetcher:(GTMHTTPFetcher *)fetcher
       // or earlier
       NSDate *expirationDate = self.expirationDate;
       NSTimeInterval timeToExpire = [expirationDate timeIntervalSinceNow];
-      if (expirationDate == nil || timeToExpire < 60.0) {
+      if (expirationDate == nil || timeToExpire < 600.0) {
         // access token has expired, or will in a few seconds
         shouldRefresh = YES;
       }
     }
   }
+
   return shouldRefresh;
 }
 

@@ -807,24 +807,19 @@ static Class gSignInClass = Nil;
   shouldStartLoadWithRequest:(NSURLRequest *)request
               navigationType:(UIWebViewNavigationType)navigationType {
 
-//    [NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[[request URL] host]];
-    
     BOOL result = _Authenticated;
+//    BOOL result = YES;
     if (!_Authenticated) {
         _FailedRequest = request;
         [[NSURLConnection alloc] initWithRequest:request delegate:self];
     }
-//    return result;
-
     else {
         if (!hasDoneFinalRedirect_) {
-    hasDoneFinalRedirect_ = [signIn_ requestRedirectedToRequest:request];
-    if (hasDoneFinalRedirect_) {
-      // signIn has told the view to close
-        result = NO;
-        return result;
-    }
-  }
+            hasDoneFinalRedirect_ = [signIn_ requestRedirectedToRequest:request];
+            if (hasDoneFinalRedirect_) {
+                result = NO;
+            }
+        }
     }
   return result;
 }

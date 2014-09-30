@@ -98,13 +98,13 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
         [authController dismissViewControllerAnimated:YES completion:nil];
     } else {
         // Sign-in succeeded
-        
+
         // Save the authentication object for use elsewhere.
         self.auth = auth;
-        
+
         // Call the method 
         authFinish();
-        
+
         // Close the auth controller
         [authController dismissViewControllerAnimated:NO completion:nil];
     }
@@ -166,7 +166,6 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     
     [BrightBot removeAuthFromKeychainForName:kKeychainItemName];
     self.auth = nil;
-    
 }
 
 - (void)authenticate:(void (^)(void))success error:(void (^)(NSError* error))error {
@@ -188,7 +187,6 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
                                   keychainItemName:kKeychainItemName
                                           delegate:self
                                   finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-    
     
 //    UIViewController *rootVC = [[[[[UIApplication sharedApplication] keyWindow] subviews] objectAtIndex:0] nextResponder];
     UIViewController *rootVC = [[[UIApplication sharedApplication].delegate window] rootViewController];
@@ -426,7 +424,7 @@ static NSString *const kServiceProviderName = @"BrightBot Service";
     NSString *time = [NSString stringWithFormat:@"\"time_spent\":%@}", time_spent];
     [progress_data appendString:time];    
     
-    NSLog(progress_data);
+//    NSLog(progress_data);
     NSString* path = [NSString stringWithFormat:@"/progress/%@", student_id];
     
     [self sendData:path method:@"POST"
